@@ -18,7 +18,7 @@ export const TermsSection: React.FC = () => {
       </div>
 
       <div className="space-y-6">
-        <Card className="p-6 bg-slate-900/60 border-slate-800 space-y-4">
+        <Card className="p-6 space-y-4">
           <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
             <Lock className="w-5 h-5 text-indigo-400" /> 1. Smart Escrow Financial Protection
           </h3>
@@ -27,7 +27,7 @@ export const TermsSection: React.FC = () => {
           </p>
         </Card>
 
-        <Card className="p-6 bg-slate-900/60 border-slate-800 space-y-4">
+        <Card className="p-6 space-y-4">
           <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
             <Scale className="w-5 h-5 text-purple-400" /> 2. AI Dispute Mediation Protocol
           </h3>
@@ -36,7 +36,7 @@ export const TermsSection: React.FC = () => {
           </p>
         </Card>
 
-        <Card className="p-6 bg-slate-900/60 border-slate-800 space-y-4">
+        <Card className="p-6 space-y-4">
           <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-emerald-400" /> 3. Asset Rental Policies & Liability
           </h3>
@@ -45,7 +45,7 @@ export const TermsSection: React.FC = () => {
           </p>
         </Card>
 
-        <Card className="p-6 bg-slate-900/60 border-slate-800 space-y-4">
+        <Card className="p-6 space-y-4">
           <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
             <FileText className="w-5 h-5 text-amber-400" /> 4. Platform Fees & Payouts
           </h3>

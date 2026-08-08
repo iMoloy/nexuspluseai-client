@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { Wallet, ShieldCheck, ArrowDownLeft, ArrowUpRight, Lock, RefreshCw, Plus, Loader2, CreditCard, Building2, Smartphone } from 'lucide-react';
+import { Wallet, ShieldCheck, ArrowDownLeft, ArrowUpRight, Lock, RefreshCw, Plus, Loader2, CreditCard, Building2, Smartphone, TrendingUp } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { fetchApi } from '@/services/api';
 
@@ -111,7 +111,7 @@ export const WalletSection: React.FC = () => {
     <div className="space-y-6">
       {/* Wallet Balance Header */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-br from-indigo-950/60 to-slate-900 border-indigo-500/30">
+        <Card className="border-indigo-500/30">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Available Balance</span>
             <Wallet className="w-5 h-5 text-indigo-400" />
@@ -120,7 +120,7 @@ export const WalletSection: React.FC = () => {
           <p className="text-xs text-slate-400 mt-2">Ready for Instant Withdrawals & Payments</p>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-950/60 to-slate-900 border-purple-500/30">
+        <Card className="border-purple-500/30">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-purple-300 uppercase tracking-wider">Escrow Hold Balance</span>
             <Lock className="w-5 h-5 text-amber-400" />
@@ -129,7 +129,7 @@ export const WalletSection: React.FC = () => {
           <p className="text-xs text-slate-400 mt-2">Protected Funds for Active Bookings & Gigs</p>
         </Card>
 
-        <Card className="bg-gradient-to-br from-emerald-950/60 to-slate-900 border-emerald-500/30 flex flex-col justify-between">
+        <Card className="border-emerald-500/30 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Deposit Funds</span>
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
@@ -137,47 +137,26 @@ export const WalletSection: React.FC = () => {
 
           <div className="space-y-2">
             {/* Payment Method Selector */}
-            <div className="grid grid-cols-4 gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800">
-              <button
-                type="button"
-                onClick={() => setPaymentMethod('STRIPE')}
-                className={`py-1 text-[11px] font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
-                  paymentMethod === 'STRIPE' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
-                }`}
-                title="Stripe Credit/Debit Card"
-              >
-                <CreditCard className="w-3 h-3" /> Stripe
-              </button>
-              <button
-                type="button"
-                onClick={() => setPaymentMethod('BKASH')}
-                className={`py-1 text-[11px] font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
-                  paymentMethod === 'BKASH' ? 'bg-pink-600 text-white' : 'text-slate-400 hover:text-slate-200'
-                }`}
-                title="bKash Mobile Banking"
-              >
-                <Smartphone className="w-3 h-3" /> bKash
-              </button>
-              <button
-                type="button"
-                onClick={() => setPaymentMethod('NAGAD')}
-                className={`py-1 text-[11px] font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
-                  paymentMethod === 'NAGAD' ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-slate-200'
-                }`}
-                title="Nagad Mobile Banking"
-              >
-                <Smartphone className="w-3 h-3" /> Nagad
-              </button>
-              <button
-                type="button"
-                onClick={() => setPaymentMethod('BANK')}
-                className={`py-1 text-[11px] font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
-                  paymentMethod === 'BANK' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-slate-200'
-                }`}
-                title="Direct Bank Transfer"
-              >
-                <Building2 className="w-3 h-3" /> Bank
-              </button>
+            <div className="flex items-center gap-2">
+              {[
+                { id: 'STRIPE', logo: <img src="/logos/visa.svg" alt="Visa" className="h-5 w-auto object-contain invert brightness-200" />, active: 'border-indigo-500 bg-indigo-950/60', hover: 'hover:border-indigo-700/60' },
+                { id: 'BKASH',  logo: <img src="/logos/bkash.svg" alt="bKash" className="h-5 w-auto object-contain" />, active: 'border-pink-500 bg-pink-950/60', hover: 'hover:border-pink-700/60' },
+                { id: 'NAGAD',  logo: <img src="/logos/nagad.svg" alt="Nagad" className="h-5 w-auto object-contain" />, active: 'border-orange-500 bg-orange-950/60', hover: 'hover:border-orange-700/60' },
+                { id: 'BANK',   logo: <img src="/logos/bank.svg" alt="Bank" className="h-5 w-auto object-contain invert brightness-150" />, active: 'border-emerald-500 bg-emerald-950/60', hover: 'hover:border-emerald-700/60' },
+              ].map(({ id, logo, active, hover }) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setPaymentMethod(id as 'STRIPE' | 'BKASH' | 'NAGAD' | 'BANK')}
+                  className={`flex items-center justify-center w-full py-2.5 rounded-xl border transition-all duration-150 ${
+                    paymentMethod === id
+                      ? `${active} border-2 shadow-md`
+                      : `bg-slate-900/50 border border-slate-700/50 ${hover}`
+                  }`}
+                >
+                  {logo}
+                </button>
+              ))}
             </div>
 
             <div className="flex items-center gap-2">
@@ -186,7 +165,7 @@ export const WalletSection: React.FC = () => {
                 placeholder="Amount ($)"
                 value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
-                className="w-full bg-slate-950/80 text-white text-sm px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-emerald-500"
+                className="w-full bg-black/80 text-white text-sm px-3 py-2 rounded-xl border border-neutral-800 focus:outline-none focus:border-emerald-500"
               />
               <Button variant="primary" size="sm" onClick={handleDeposit} isLoading={isDepositing} leftIcon={<Plus className="w-4 h-4" />}>
                 Deposit
@@ -195,6 +174,49 @@ export const WalletSection: React.FC = () => {
           </div>
         </Card>
       </div>
+
+      {/* Visual Analytics Chart Widget */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-800/80">
+          <div>
+            <h3 className="text-base font-extrabold text-slate-100 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-emerald-400" /> Escrow Balance Growth & Analytics
+            </h3>
+            <p className="text-xs text-slate-400">Monthly transactional velocity and escrow protection volume</p>
+          </div>
+          <Badge variant="primary" icon={<TrendingUp className="w-3 h-3 text-emerald-400" />}>
+            +24.8% Monthly Growth
+          </Badge>
+        </div>
+
+        {/* Visual Bar Chart */}
+        <div className="pt-4 flex items-end justify-between gap-3 h-40 border-b border-slate-800/60 pb-2">
+          {[
+            { month: 'Jan', val: 40, label: '$850' },
+            { month: 'Feb', val: 65, label: '$1,200' },
+            { month: 'Mar', val: 50, label: '$950' },
+            { month: 'Apr', val: 85, label: '$1,600' },
+            { month: 'May', val: 70, label: '$1,350' },
+            { month: 'Jun', val: 95, label: '$2,100' },
+            { month: 'Jul', val: 100, label: '$2,450' }
+          ].map((bar, idx) => (
+            <div key={idx} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
+              <span className="text-[10px] font-bold text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                {bar.label}
+              </span>
+              <div className="w-full bg-black/60 rounded-t-xl h-28 flex items-end p-1 overflow-hidden">
+                <div
+                  style={{ height: `${bar.val}%` }}
+                  className="w-full bg-gradient-to-t from-indigo-600 via-violet-500 to-emerald-400 rounded-t-lg group-hover:brightness-125 transition-all duration-300"
+                />
+              </div>
+              <span className="text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">
+                {bar.month}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       {/* Transaction History Ledger */}
       <Card>
@@ -212,7 +234,7 @@ export const WalletSection: React.FC = () => {
           {transactions.map((tx) => (
             <div
               key={tx.id}
-              className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition-colors"
+              className="flex items-center justify-between p-3.5 rounded-xl bg-black/60 border border-neutral-800/80 hover:border-neutral-700 transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${tx.isLock ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}`}>

@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Car, ShieldCheck, MapPin, Calendar, CheckCircle2, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { fetchApi } from '@/services/api';
+import { BrandBadge } from '@/components/ui/BrandBadge';
 
 export const RentalSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -31,6 +32,7 @@ export const RentalSection: React.FC = () => {
       location: 'Dhaka, Bangladesh',
       image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800',
       ownerName: 'Sharif Ahmed',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Tesla_logo.png',
       rating: 4.9
     },
     {
@@ -42,6 +44,7 @@ export const RentalSection: React.FC = () => {
       location: 'Gulshan 2, Dhaka',
       image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800',
       ownerName: 'Zubair Hossain',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg',
       rating: 4.95
     },
     {
@@ -53,6 +56,7 @@ export const RentalSection: React.FC = () => {
       location: 'Banani, Dhaka',
       image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800',
       ownerName: 'Tanvir Rahman',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/en/3/3f/Porsche_logo.svg',
       rating: 5.0
     },
     {
@@ -64,6 +68,7 @@ export const RentalSection: React.FC = () => {
       location: 'Dhanmondi, Dhaka',
       image: 'https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?w=800',
       ownerName: 'Imran Khan',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg',
       rating: 4.88
     },
     {
@@ -75,6 +80,7 @@ export const RentalSection: React.FC = () => {
       location: 'Uttara, Dhaka',
       image: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=800',
       ownerName: 'Moloy Paul',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Ford_logo_flat.svg',
       rating: 4.92
     },
     {
@@ -86,6 +92,7 @@ export const RentalSection: React.FC = () => {
       location: 'Baridhara DOHS, Dhaka',
       image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800',
       ownerName: 'Arafat Rahman',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Land_Rover_logo.svg',
       rating: 4.9
     },
     {
@@ -97,6 +104,7 @@ export const RentalSection: React.FC = () => {
       location: 'Mirpur DOHS, Dhaka',
       image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800',
       ownerName: 'Sabbir Ahmed',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg',
       rating: 4.87
     },
     {
@@ -108,6 +116,7 @@ export const RentalSection: React.FC = () => {
       location: 'Bashundhara R/A, Dhaka',
       image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=800',
       ownerName: 'Rifat Chowdhury',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Ducati_Motor_Holdings_Logo_2013.svg',
       rating: 4.96
     },
     {
@@ -119,6 +128,7 @@ export const RentalSection: React.FC = () => {
       location: 'Puran Dhaka, Bangladesh',
       image: 'https://images.unsplash.com/photo-1541348263662-e082662d82da?w=800',
       ownerName: 'Mahbub Hassan',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Toyota_carlogo.svg',
       rating: 4.91
     },
     {
@@ -198,6 +208,7 @@ export const RentalSection: React.FC = () => {
       location: 'Bashundhara R/A, Dhaka',
       image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800',
       ownerName: 'Rakib Islam',
+      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
       rating: 4.91
     },
     {
@@ -445,7 +456,7 @@ export const RentalSection: React.FC = () => {
           <p className="text-sm text-slate-400">Rent high-value cars, cinema equipment & workspaces with Escrow security</p>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-slate-900/80 p-1 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-1.5 bg-black/80 p-1.5 rounded-xl border border-indigo-500/20 backdrop-blur-xl">
           {[
             { key: 'ALL', label: 'All Assets' },
             { key: 'VEHICLE', label: 'Vehicles' },
@@ -475,25 +486,30 @@ export const RentalSection: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {displayAssets.map((asset) => (
-          <Card key={asset.id} hoverEffect className="flex flex-col justify-between overflow-hidden p-0">
-            <div className="relative h-48 w-full overflow-hidden bg-slate-950">
+          <Card key={asset.id} hoverEffect className="flex flex-col justify-between overflow-hidden p-0 group shadow-2xl">
+            <div className="relative h-52 w-full overflow-hidden bg-slate-950">
               <img
                 src={asset.image}
                 alt={asset.title}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800';
                 }}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
               <div className="absolute top-3 left-3">
-                <Badge variant="primary" className="backdrop-blur-md bg-slate-950/70">
+                <Badge variant="primary" className="backdrop-blur-xl bg-indigo-950/80 border border-indigo-500/40 font-bold">
                   ${asset.rentalRate}/day
                 </Badge>
               </div>
               <div className="absolute top-3 right-3">
-                <Badge variant="success" icon={<ShieldCheck className="w-3 h-3" />}>
-                  ${asset.securityDeposit} Deposit
+                <Badge variant="success" icon={<ShieldCheck className="w-3 h-3" />} className="backdrop-blur-xl bg-emerald-950/80 border border-emerald-500/40 font-bold">
+                  ${asset.securityDeposit} Escrow Deposit
                 </Badge>
+              </div>
+              <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-800 text-[11px] font-bold text-amber-400">
+                <BrandBadge title={asset.title} className="w-4 h-4" />
+                ★ {asset.rating || '4.9'}
               </div>
             </div>
 
@@ -544,7 +560,7 @@ export const RentalSection: React.FC = () => {
                 className={`w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-colors ${
                   currentPage === pageNum
                     ? 'bg-indigo-600 text-white font-bold'
-                    : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
+                    : 'bg-black/80 border border-neutral-800 text-slate-400 hover:text-white hover:border-indigo-500/40'
                 }`}
               >
                 {pageNum}
@@ -569,7 +585,7 @@ export const RentalSection: React.FC = () => {
         <Modal isOpen={!!activeAsset} onClose={() => setActiveAsset(null)} title={`Rent ${activeAsset.title}`}>
           <div className="space-y-4">
             <div className="flex items-center gap-4 p-3 bg-slate-950 rounded-xl border border-slate-800">
-              <img src={activeAsset.image} alt={activeAsset.title} className="w-20 h-16 object-cover rounded-lg" />
+              <img src={activeAsset.image} alt={activeAsset.title} className="w-20 h-16 object-cover rounded-lg" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400'; }} />
               <div>
                 <h4 className="text-sm font-bold text-slate-100">{activeAsset.title}</h4>
                 <div className="text-xs text-slate-400 mt-0.5">${activeAsset.rentalRate}/day • ${activeAsset.securityDeposit} Escrow Security Deposit</div>

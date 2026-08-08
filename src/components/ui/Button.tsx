@@ -25,14 +25,14 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center font-bold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95';
 
   const variants = {
-    primary: 'bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:opacity-95',
-    secondary: 'bg-slate-800 text-slate-100 hover:bg-slate-700 border border-slate-700/60',
-    outline: 'border border-indigo-500/40 text-indigo-300 hover:bg-indigo-500/10',
-    ghost: 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60',
-    danger: 'bg-rose-600 text-white hover:bg-rose-700 shadow-md shadow-rose-600/20'
+    primary: 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:brightness-110 border border-indigo-400/40',
+    secondary: 'bg-black/80 text-slate-200 hover:text-white hover:bg-neutral-900 border border-neutral-800 hover:border-indigo-500/40 shadow-lg shadow-black/80 backdrop-blur-xl',
+    outline: 'border border-indigo-500/40 text-indigo-300 hover:text-white hover:bg-indigo-950/40 backdrop-blur-xl hover:border-indigo-400 shadow-md',
+    ghost: 'text-slate-400 hover:text-slate-100 hover:bg-neutral-900/80 backdrop-blur-md',
+    danger: 'bg-gradient-to-r from-rose-600 to-pink-600 text-white hover:brightness-110 shadow-xl shadow-rose-600/25 border border-rose-400/30'
   };
 
   const sizes = {

@@ -60,7 +60,7 @@ export const ContactSection: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Contact Info Cards */}
         <div className="space-y-4">
-          <Card className="p-5 bg-slate-900/60 border-slate-800 flex items-start gap-4">
+          <Card className="p-5 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
               <Mail className="w-5 h-5" />
             </div>
@@ -71,7 +71,7 @@ export const ContactSection: React.FC = () => {
             </div>
           </Card>
 
-          <Card className="p-5 bg-slate-900/60 border-slate-800 flex items-start gap-4">
+          <Card className="p-5 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
               <Phone className="w-5 h-5" />
             </div>
@@ -82,7 +82,7 @@ export const ContactSection: React.FC = () => {
             </div>
           </Card>
 
-          <Card className="p-5 bg-slate-900/60 border-slate-800 flex items-start gap-4">
+          <Card className="p-5 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5" />
             </div>
@@ -95,7 +95,7 @@ export const ContactSection: React.FC = () => {
         </div>
 
         {/* Contact Form */}
-        <Card className="md:col-span-2 p-6 bg-slate-900/80 border-slate-800">
+        <Card className="md:col-span-2 p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input

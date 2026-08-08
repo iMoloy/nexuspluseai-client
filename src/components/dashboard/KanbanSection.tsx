@@ -127,20 +127,20 @@ export const KanbanSection: React.FC = () => {
         {columns.map((col) => {
           const colTasks = tasks.filter((t) => t.status === col.key);
           return (
-            <div key={col.key} className="flex flex-col gap-3 p-3 bg-slate-900/50 border border-slate-800/80 rounded-2xl h-auto">
-              <div className="flex items-center justify-between px-2 py-1 pb-2 border-b border-slate-800">
-                <span className="text-sm font-bold text-slate-200 flex items-center gap-2">
+            <div key={col.key} className="flex flex-col gap-3 p-3.5 bg-gradient-to-b from-indigo-950/30 via-slate-950/80 to-black/90 backdrop-blur-2xl border border-indigo-500/20 rounded-2xl h-auto shadow-2xl">
+              <div className="flex items-center justify-between px-2 py-1 pb-2.5 border-b border-neutral-800">
+                <span className="text-sm font-extrabold text-slate-100 flex items-center gap-2">
                   {col.icon} {col.title}
                 </span>
-                <Badge variant={col.variant}>{colTasks.length}</Badge>
+                <Badge variant={col.variant} className="font-bold">{colTasks.length}</Badge>
               </div>
 
               <div className="space-y-3">
                 {colTasks.map((gig) => (
-                  <Card key={gig.id} className="p-4 bg-slate-900 border-slate-800 hover:border-slate-700">
+                  <Card key={gig.id} hoverEffect className="p-4 shadow-lg group">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-medium text-slate-400">{gig.category}</span>
-                      <Badge variant="success" icon={<Lock className="w-3 h-3" />}>
+                      <span className="text-xs font-semibold text-indigo-400 bg-indigo-950/60 px-2 py-0.5 rounded-md border border-indigo-500/20">{gig.category}</span>
+                      <Badge variant="success" icon={<Lock className="w-3 h-3" />} className="bg-emerald-950/80 border border-emerald-500/30 font-bold">
                         ${gig.budget} Escrow
                       </Badge>
                     </div>

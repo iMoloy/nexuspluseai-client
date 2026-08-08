@@ -23,19 +23,19 @@ export const AboutSection: React.FC = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-5 text-center bg-slate-900/60 border-slate-800">
+        <Card className="p-5 text-center">
           <div className="text-3xl font-extrabold text-indigo-400 mb-1">$2.5M+</div>
           <div className="text-xs text-slate-400">Escrow Protected</div>
         </Card>
-        <Card className="p-5 text-center bg-slate-900/60 border-slate-800">
+        <Card className="p-5 text-center">
           <div className="text-3xl font-extrabold text-emerald-400 mb-1">99.8%</div>
           <div className="text-xs text-slate-400">Dispute-Free Settlements</div>
         </Card>
-        <Card className="p-5 text-center bg-slate-900/60 border-slate-800">
+        <Card className="p-5 text-center">
           <div className="text-3xl font-extrabold text-purple-400 mb-1">15,000+</div>
           <div className="text-xs text-slate-400">Active Freelancers</div>
         </Card>
-        <Card className="p-5 text-center bg-slate-900/60 border-slate-800">
+        <Card className="p-5 text-center">
           <div className="text-3xl font-extrabold text-amber-400 mb-1">4,800+</div>
           <div className="text-xs text-slate-400">Listed Rental Assets</div>
         </Card>
@@ -43,7 +43,7 @@ export const AboutSection: React.FC = () => {
 
       {/* Core Mission Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 bg-slate-900/70 border-slate-800 space-y-3">
+        <Card className="p-6 space-y-3">
           <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
             <Cpu className="w-5 h-5" />
           </div>
@@ -53,7 +53,7 @@ export const AboutSection: React.FC = () => {
           </p>
         </Card>
 
-        <Card className="p-6 bg-slate-900/70 border-slate-800 space-y-3">
+        <Card className="p-6 space-y-3">
           <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
             <ShieldCheck className="w-5 h-5" />
           </div>
@@ -63,7 +63,7 @@ export const AboutSection: React.FC = () => {
           </p>
         </Card>
 
-        <Card className="p-6 bg-slate-900/70 border-slate-800 space-y-3">
+        <Card className="p-6 space-y-3">
           <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
             <Globe className="w-5 h-5" />
           </div>

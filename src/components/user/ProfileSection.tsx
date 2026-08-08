@@ -123,7 +123,7 @@ export const ProfileSection: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-8 py-4">
       {/* Profile Banner & Header */}
-      <Card className="p-0 overflow-hidden bg-slate-900/80 border-slate-800">
+      <Card className="p-0 overflow-hidden">
         <div className="h-36 bg-gradient-to-r from-indigo-900 via-violet-900 to-slate-900 relative">
           <div className="absolute top-4 right-4 flex items-center gap-2">
             <Badge variant="success" icon={<ShieldCheck className="w-3.5 h-3.5" />}>
@@ -190,7 +190,7 @@ export const ProfileSection: React.FC = () => {
       {/* TAB 1: PROFILE DETAILS FORM */}
       {activeTab === 'DETAILS' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="md:col-span-2 p-6 bg-slate-900/80 border-slate-800">
+          <Card className="md:col-span-2 p-6">
             <h3 className="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
               <Edit3 className="w-5 h-5 text-indigo-400" /> Account & Personal Information
             </h3>
@@ -247,7 +247,7 @@ export const ProfileSection: React.FC = () => {
 
           {/* Quick Stats Sidebar */}
           <div className="space-y-4">
-            <Card className="p-5 bg-slate-900/60 border-slate-800 space-y-4">
+            <Card className="p-5 space-y-4">
               <h4 className="text-sm font-bold text-slate-200 flex items-center gap-2">
                 <Star className="w-4 h-4 text-amber-400" /> Performance Rating
               </h4>
@@ -258,7 +258,7 @@ export const ProfileSection: React.FC = () => {
               <p className="text-xs text-slate-400">Based on 48 completed Escrow gigs & rentals</p>
             </Card>
 
-            <Card className="p-5 bg-slate-900/60 border-slate-800 space-y-3">
+            <Card className="p-5 space-y-3">
               <h4 className="text-sm font-bold text-slate-200 flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" /> Identity & Verification
               </h4>
@@ -283,7 +283,7 @@ export const ProfileSection: React.FC = () => {
 
       {/* TAB 2: SECURITY & PASSWORD */}
       {activeTab === 'SECURITY' && (
-        <Card className="max-w-2xl mx-auto p-6 bg-slate-900/80 border-slate-800 space-y-6">
+        <Card className="max-w-2xl mx-auto p-6 space-y-6">
           <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
             <Key className="w-5 h-5 text-indigo-400" /> Change Password & Security
           </h3>
@@ -320,7 +320,7 @@ export const ProfileSection: React.FC = () => {
 
       {/* TAB 3: ACTIVITY HISTORY */}
       {activeTab === 'ACTIVITY' && (
-        <Card className="p-6 bg-slate-900/80 border-slate-800 space-y-4">
+        <Card className="p-6 space-y-4">
           <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-indigo-400" /> Recent Activity & Milestones
           </h3>
@@ -332,7 +332,7 @@ export const ProfileSection: React.FC = () => {
               { title: 'Deposited $500 via Stripe Card', date: '3 days ago', tag: 'Wallet' },
               { title: 'Profile Information Updated', date: '5 days ago', tag: 'Account' }
             ].map((act, i) => (
-              <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-black/60 border border-neutral-800">
                 <div>
                   <h4 className="text-sm font-semibold text-slate-200">{act.title}</h4>
                   <span className="text-xs text-slate-500">{act.date}</span>
