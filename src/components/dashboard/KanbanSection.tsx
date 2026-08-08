@@ -105,7 +105,6 @@ export const KanbanSection: React.FC = () => {
       toast.info(`Kanban Status updated to ${newStatus}`);
     }
   };
-  };
 
   const columns = [
     { key: 'OPEN', title: 'Open Gigs', icon: <Briefcase className="w-4 h-4 text-indigo-400" />, variant: 'primary' as const },

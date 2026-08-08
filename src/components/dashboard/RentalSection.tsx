@@ -211,6 +211,7 @@ export const RentalSection: React.FC = () => {
           </Card>
         ))}
       </div>
+      )}
 
       {/* Rental Booking Modal */}
       {activeAsset && (
