@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
-import { Car, Camera, Wrench, Building, ShieldCheck, MapPin, Calendar, CheckCircle2 } from 'lucide-react';
+import { Car, ShieldCheck, MapPin, Calendar, CheckCircle2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 export const RentalSection: React.FC = () => {

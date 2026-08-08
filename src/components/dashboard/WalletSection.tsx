@@ -32,7 +32,7 @@ export const WalletSection: React.FC = () => {
       setBalance((prev) => prev + val);
       setTransactions((prev) => [
         {
-          id: `tx_${Date.now()}`,
+          id: `tx_dep_${prev.length + 1}`,
           type: 'DEPOSIT',
           amount: val,
           title: 'Stripe Gateway In-App Deposit',
