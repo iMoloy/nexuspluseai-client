@@ -6,6 +6,12 @@ import { SessionProvider } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from '@/hooks/useAuth';
+import { useSSE } from '@/hooks/useSSE';
+
+function SSEListener() {
+  useSSE();
+  return null;
+}
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -23,6 +29,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <AuthProvider>
+        <SSEListener />
         <QueryClientProvider client={queryClient}>
           {children}
           <ToastContainer

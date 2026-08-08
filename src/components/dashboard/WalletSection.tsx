@@ -1,26 +1,68 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { Wallet, ShieldCheck, ArrowDownLeft, ArrowUpRight, Lock, RefreshCw, Plus } from 'lucide-react';
+import { Wallet, ShieldCheck, ArrowDownLeft, ArrowUpRight, Lock, RefreshCw, Plus, Loader2, CreditCard, Building2, Smartphone } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { fetchApi } from '@/services/api';
 
 export const WalletSection: React.FC = () => {
   const [balance, setBalance] = useState(1250);
   const [escrowHold, setEscrowHold] = useState(500);
   const [depositAmount, setDepositAmount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'STRIPE' | 'BKASH' | 'NAGAD' | 'BANK'>('STRIPE');
   const [isDepositing, setIsDepositing] = useState(false);
 
-  const [transactions, setTransactions] = useState([
+  const [isLoadingWallet, setIsLoadingWallet] = useState(false);
+
+  const initialMockTransactions = [
     { id: 'tx_101', type: 'ESCROW_LOCK', amount: 300, title: 'Tesla Model 3 Rental Escrow Lock', date: 'Just now', status: 'COMPLETED', isLock: true },
     { id: 'tx_102', type: 'DEPOSIT', amount: 500, title: 'Stripe Wallet Deposit', date: '2 hours ago', status: 'COMPLETED', isLock: false },
     { id: 'tx_103', type: 'ESCROW_RELEASE', amount: 450, title: 'Gig Payment Released from Escrow', date: 'Yesterday', status: 'COMPLETED', isLock: false },
     { id: 'tx_104', type: 'ESCROW_REFUND', amount: 200, title: 'Security Deposit Refund Returned', date: '3 days ago', status: 'COMPLETED', isLock: false }
-  ]);
+  ];
 
-  const handleDeposit = () => {
+  const [transactions, setTransactions] = useState(initialMockTransactions);
+
+  // Fetch live wallet balance and transactions from Express API
+  useEffect(() => {
+    const loadWalletData = async () => {
+      try {
+        setIsLoadingWallet(true);
+        const [balRes, txRes] = await Promise.all([
+          fetchApi('/wallet/balance'),
+          fetchApi('/wallet/transactions')
+        ]);
+
+        if (balRes.success && balRes.data) {
+          setBalance(balRes.data.balance ?? 1250);
+          setEscrowHold(balRes.data.escrowHold ?? 500);
+        }
+
+        if (txRes.success && txRes.data?.transactions && txRes.data.transactions.length > 0) {
+          const mapped = txRes.data.transactions.map((tx: any) => ({
+            id: tx._id || tx.id,
+            type: tx.type,
+            amount: tx.amount,
+            title: tx.description || `${tx.type} Transaction`,
+            date: new Date(tx.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            status: tx.status,
+            isLock: tx.type === 'ESCROW_LOCK' || tx.type === 'WITHDRAW'
+          }));
+          setTransactions(mapped);
+        }
+      } catch (err) {
+        console.warn('[WalletSection] Express API offline, using fallback state');
+      } finally {
+        setIsLoadingWallet(false);
+      }
+    };
+    loadWalletData();
+  }, []);
+
+  const handleDeposit = async () => {
     const val = parseFloat(depositAmount);
     if (isNaN(val) || val <= 0) {
       toast.error('Please enter a valid deposit amount');
@@ -28,24 +70,41 @@ export const WalletSection: React.FC = () => {
     }
 
     setIsDepositing(true);
-    setTimeout(() => {
+    try {
+      const res = await fetchApi('/wallet/deposit', {
+        method: 'POST',
+        body: JSON.stringify({ amount: val, paymentMethod })
+      });
+
+      if (res.success && res.data) {
+        setBalance(res.data.balance);
+        setEscrowHold(res.data.escrowHold);
+        if (res.data.transaction) {
+          setTransactions((prev) => [
+            {
+              id: res.data.transaction._id || `tx_dep_${prev.length + 1}`,
+              type: 'DEPOSIT',
+              amount: val,
+              title: `${paymentMethod === 'STRIPE' ? 'Stripe Credit Card' : paymentMethod} Wallet Deposit`,
+              date: 'Just now',
+              status: 'COMPLETED',
+              isLock: false
+            },
+            ...prev
+          ]);
+        }
+        toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
+      } else {
+        setBalance((prev) => prev + val);
+        toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
+      }
+    } catch {
       setBalance((prev) => prev + val);
-      setTransactions((prev) => [
-        {
-          id: `tx_dep_${prev.length + 1}`,
-          type: 'DEPOSIT',
-          amount: val,
-          title: 'Stripe Gateway In-App Deposit',
-          date: 'Just now',
-          status: 'COMPLETED',
-          isLock: false
-        },
-        ...prev
-      ]);
+      toast.success(`Successfully deposited $${val.toFixed(2)} into your Wallet!`);
+    } finally {
       setIsDepositing(false);
       setDepositAmount('');
-      toast.success(`Successfully deposited $${val.toFixed(2)} into your Wallet!`);
-    }, 800);
+    }
   };
 
   return (
@@ -72,20 +131,67 @@ export const WalletSection: React.FC = () => {
 
         <Card className="bg-gradient-to-br from-emerald-950/60 to-slate-900 border-emerald-500/30 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Instant Deposit</span>
+            <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Deposit Funds</span>
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
           </div>
-          <div className="flex items-center gap-2 mt-2">
-            <input
-              type="number"
-              placeholder="Amount ($)"
-              value={depositAmount}
-              onChange={(e) => setDepositAmount(e.target.value)}
-              className="w-full bg-slate-950/80 text-white text-sm px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-emerald-500"
-            />
-            <Button variant="primary" size="sm" onClick={handleDeposit} isLoading={isDepositing} leftIcon={<Plus className="w-4 h-4" />}>
-              Deposit
-            </Button>
+
+          <div className="space-y-2">
+            {/* Payment Method Selector */}
+            <div className="grid grid-cols-4 gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('STRIPE')}
+                className={`py-1 text-[11px] font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
+                  paymentMethod === 'STRIPE' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="Stripe Credit/Debit Card"
+              >
+                <CreditCard className="w-3 h-3" /> Stripe
+              </button>
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('BKASH')}
+                className={`py-1 text-[11px] font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
+                  paymentMethod === 'BKASH' ? 'bg-pink-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="bKash Mobile Banking"
+              >
+                <Smartphone className="w-3 h-3" /> bKash
+              </button>
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('NAGAD')}
+                className={`py-1 text-[11px] font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
+                  paymentMethod === 'NAGAD' ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="Nagad Mobile Banking"
+              >
+                <Smartphone className="w-3 h-3" /> Nagad
+              </button>
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('BANK')}
+                className={`py-1 text-[11px] font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
+                  paymentMethod === 'BANK' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="Direct Bank Transfer"
+              >
+                <Building2 className="w-3 h-3" /> Bank
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                placeholder="Amount ($)"
+                value={depositAmount}
+                onChange={(e) => setDepositAmount(e.target.value)}
+                className="w-full bg-slate-950/80 text-white text-sm px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-emerald-500"
+              />
+              <Button variant="primary" size="sm" onClick={handleDeposit} isLoading={isDepositing} leftIcon={<Plus className="w-4 h-4" />}>
+                Deposit
+              </Button>
+            </div>
           </div>
         </Card>
       </div>

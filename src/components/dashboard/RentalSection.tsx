@@ -19,8 +19,9 @@ export const RentalSection: React.FC = () => {
   const [serverAssets, setServerAssets] = useState<any[]>([]);
 
   const mockAssets = [
+    // VEHICLE CATEGORY (10 ASSETS)
     {
-      id: 'ast_1',
+      id: 'v_1',
       title: 'Tesla Model 3 Performance 2025',
       category: 'VEHICLE',
       rentalRate: 120,
@@ -31,7 +32,108 @@ export const RentalSection: React.FC = () => {
       rating: 4.9
     },
     {
-      id: 'ast_2',
+      id: 'v_2',
+      title: 'BMW M4 Competition Convertible',
+      category: 'VEHICLE',
+      rentalRate: 250,
+      securityDeposit: 500,
+      location: 'Gulshan 2, Dhaka',
+      image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800',
+      ownerName: 'Zubair Hossain',
+      rating: 4.95
+    },
+    {
+      id: 'v_3',
+      title: 'Porsche 911 Carrera S Coupe',
+      category: 'VEHICLE',
+      rentalRate: 350,
+      securityDeposit: 750,
+      location: 'Banani, Dhaka',
+      image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800',
+      ownerName: 'Tanvir Rahman',
+      rating: 5.0
+    },
+    {
+      id: 'v_4',
+      title: 'Mercedes-Benz G 63 AMG V8 Biturbo',
+      category: 'VEHICLE',
+      rentalRate: 400,
+      securityDeposit: 800,
+      location: 'Dhanmondi, Dhaka',
+      image: 'https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?w=800',
+      ownerName: 'Imran Khan',
+      rating: 4.88
+    },
+    {
+      id: 'v_5',
+      title: 'Ford Mustang GT 5.0 V8 Muscle Car',
+      category: 'VEHICLE',
+      rentalRate: 180,
+      securityDeposit: 350,
+      location: 'Uttara, Dhaka',
+      image: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=800',
+      ownerName: 'Moloy Paul',
+      rating: 4.92
+    },
+    {
+      id: 'v_6',
+      title: 'Range Rover Sport Autobiography 2024',
+      category: 'VEHICLE',
+      rentalRate: 300,
+      securityDeposit: 600,
+      location: 'Baridhara DOHS, Dhaka',
+      image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800',
+      ownerName: 'Arafat Rahman',
+      rating: 4.9
+    },
+    {
+      id: 'v_7',
+      title: 'Audi RS6 Avant Performance Twin Turbo',
+      category: 'VEHICLE',
+      rentalRate: 280,
+      securityDeposit: 550,
+      location: 'Mirpur DOHS, Dhaka',
+      image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800',
+      ownerName: 'Sabbir Ahmed',
+      rating: 4.87
+    },
+    {
+      id: 'v_8',
+      title: 'Ducati Panigale V4 S Superbike',
+      category: 'VEHICLE',
+      rentalRate: 150,
+      securityDeposit: 300,
+      location: 'Bashundhara R/A, Dhaka',
+      image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=800',
+      ownerName: 'Rifat Chowdhury',
+      rating: 4.96
+    },
+    {
+      id: 'v_9',
+      title: 'Toyota Land Cruiser 300 ZX VIP Edition',
+      category: 'VEHICLE',
+      rentalRate: 220,
+      securityDeposit: 450,
+      location: 'Puran Dhaka, Bangladesh',
+      image: 'https://images.unsplash.com/photo-1541348263662-e082662d82da?w=800',
+      ownerName: 'Mahbub Hassan',
+      rating: 4.91
+    },
+    {
+      id: 'v_10',
+      title: 'Chevrolet Corvette Z06 3LZ Coupe',
+      category: 'VEHICLE',
+      rentalRate: 320,
+      securityDeposit: 650,
+      location: 'Chattogram, Bangladesh',
+      image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800',
+      ownerName: 'Naimur Rahman',
+      rating: 4.98
+    },
+
+    // TECH_EQUIPMENT CATEGORY (10 ASSETS)
+    {
+      id: 't_1',
       title: 'RED V-Raptor 8K Cinema Camera Kit',
       category: 'TECH_EQUIPMENT',
       rentalRate: 180,
@@ -42,8 +144,8 @@ export const RentalSection: React.FC = () => {
       rating: 5.0
     },
     {
-      id: 'ast_3',
-      title: 'DJI Inspire 3 Pro Drone Combo',
+      id: 't_2',
+      title: 'DJI Inspire 3 Pro Cinema Drone Combo',
       category: 'TECH_EQUIPMENT',
       rentalRate: 140,
       securityDeposit: 300,
@@ -53,7 +155,97 @@ export const RentalSection: React.FC = () => {
       rating: 4.8
     },
     {
-      id: 'ast_4',
+      id: 't_3',
+      title: 'Sony FX6 Full-Frame Cinema Line Camera',
+      category: 'TECH_EQUIPMENT',
+      rentalRate: 130,
+      securityDeposit: 250,
+      location: 'Dhanmondi, Dhaka',
+      image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
+      ownerName: 'Fahim Hasan',
+      rating: 4.94
+    },
+    {
+      id: 't_4',
+      title: 'ARRI Alexa Mini LF Cinema Package',
+      category: 'TECH_EQUIPMENT',
+      rentalRate: 300,
+      securityDeposit: 600,
+      location: 'Banani, Dhaka',
+      image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800',
+      ownerName: 'Kazi Noman',
+      rating: 5.0
+    },
+    {
+      id: 't_5',
+      title: 'Canon EOS C300 Mark III 4K Rig',
+      category: 'TECH_EQUIPMENT',
+      rentalRate: 110,
+      securityDeposit: 220,
+      location: 'Mohakhali, Dhaka',
+      image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800',
+      ownerName: 'Shahriar Ahmed',
+      rating: 4.86
+    },
+    {
+      id: 't_6',
+      title: 'Apple Mac Studio M2 Ultra Render Station',
+      category: 'TECH_EQUIPMENT',
+      rentalRate: 95,
+      securityDeposit: 200,
+      location: 'Bashundhara R/A, Dhaka',
+      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800',
+      ownerName: 'Rakib Islam',
+      rating: 4.91
+    },
+    {
+      id: 't_7',
+      title: 'Aputure 1200d Pro Daylight LED Lighting Kit',
+      category: 'TECH_EQUIPMENT',
+      rentalRate: 75,
+      securityDeposit: 150,
+      location: 'Lalmatia, Dhaka',
+      image: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=800',
+      ownerName: 'Hassan Ali',
+      rating: 4.88
+    },
+    {
+      id: 't_8',
+      title: 'Sennheiser MKH 416 & Sound Devices Mixer',
+      category: 'TECH_EQUIPMENT',
+      rentalRate: 60,
+      securityDeposit: 120,
+      location: 'Elephant Road, Dhaka',
+      image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800',
+      ownerName: 'Mehedi Hasan',
+      rating: 4.93
+    },
+    {
+      id: 't_9',
+      title: 'Ronin 4D 8K Cinema Gimbal Combination',
+      category: 'TECH_EQUIPMENT',
+      rentalRate: 160,
+      securityDeposit: 320,
+      location: 'Sylhet, Bangladesh',
+      image: 'https://images.unsplash.com/photo-1500462875327-0c1a938c5b36?w=800',
+      ownerName: 'Jahid Chowdhury',
+      rating: 4.97
+    },
+    {
+      id: 't_10',
+      title: 'Blackmagic URSA Mini Pro 12K Camera',
+      category: 'TECH_EQUIPMENT',
+      rentalRate: 150,
+      securityDeposit: 300,
+      location: 'Chattogram, Bangladesh',
+      image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800',
+      ownerName: 'Saiful Islam',
+      rating: 4.89
+    },
+
+    // WORKSPACE CATEGORY (10 ASSETS)
+    {
+      id: 'w_1',
       title: 'Modern Creative Podcast & Tech Studio',
       category: 'WORKSPACE',
       rentalRate: 90,
@@ -62,6 +254,105 @@ export const RentalSection: React.FC = () => {
       image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800',
       ownerName: 'Arafat Rahman',
       rating: 4.9
+    },
+    {
+      id: 'w_2',
+      title: 'Executive Glassmorphism Co-Working Suite',
+      category: 'WORKSPACE',
+      rentalRate: 110,
+      securityDeposit: 200,
+      location: 'Gulshan 1, Dhaka',
+      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800',
+      ownerName: 'Nusrat Jahan',
+      rating: 4.95
+    },
+    {
+      id: 'w_3',
+      title: 'Minimalist Tech Startup Incubator Hub',
+      category: 'WORKSPACE',
+      rentalRate: 85,
+      securityDeposit: 140,
+      location: 'Dhanmondi, Dhaka',
+      image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800',
+      ownerName: 'Karim Ahmed',
+      rating: 4.87
+    },
+    {
+      id: 'w_4',
+      title: 'Panoramic High-Rise Conference Room',
+      category: 'WORKSPACE',
+      rentalRate: 150,
+      securityDeposit: 250,
+      location: 'Motijheel, Dhaka',
+      image: 'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=800',
+      ownerName: 'Kamrul Islam',
+      rating: 4.93
+    },
+    {
+      id: 'w_5',
+      title: 'Soundproof Music & Audio Recording Booth',
+      category: 'WORKSPACE',
+      rentalRate: 70,
+      securityDeposit: 100,
+      location: 'Uttara Sector 3, Dhaka',
+      image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800',
+      ownerName: 'Arif Chowdhury',
+      rating: 4.89
+    },
+    {
+      id: 'w_6',
+      title: 'Industrial Loft Photography & Video Studio',
+      category: 'WORKSPACE',
+      rentalRate: 130,
+      securityDeposit: 220,
+      location: 'Tejgaon, Dhaka',
+      image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800',
+      ownerName: 'Shakil Ahmed',
+      rating: 4.96
+    },
+    {
+      id: 'w_7',
+      title: 'Boutique Design & Architecture Workshop',
+      category: 'WORKSPACE',
+      rentalRate: 100,
+      securityDeposit: 180,
+      location: 'Baridhara, Dhaka',
+      image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800',
+      ownerName: 'Anisur Rahman',
+      rating: 4.88
+    },
+    {
+      id: 'w_8',
+      title: 'Rooftop Lounge Event Space & Seminar Hall',
+      category: 'WORKSPACE',
+      rentalRate: 200,
+      securityDeposit: 350,
+      location: 'Bashundhara R/A, Dhaka',
+      image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800',
+      ownerName: 'Mahir Faiyaz',
+      rating: 4.98
+    },
+    {
+      id: 'w_9',
+      title: 'Cyberpunk Game Development & VR Lab',
+      category: 'WORKSPACE',
+      rentalRate: 125,
+      securityDeposit: 210,
+      location: 'Mirpur 10, Dhaka',
+      image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800',
+      ownerName: 'Siam Hossain',
+      rating: 4.92
+    },
+    {
+      id: 'w_10',
+      title: 'Private Founder Executive Office Suite',
+      category: 'WORKSPACE',
+      rentalRate: 140,
+      securityDeposit: 230,
+      location: 'Chattogram, Bangladesh',
+      image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
+      ownerName: 'Zakir Hossain',
+      rating: 4.91
     }
   ];
 
