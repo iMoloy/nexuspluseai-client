@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { WalletSection } from '@/components/dashboard/WalletSection';
 import { RentalSection } from '@/components/dashboard/RentalSection';
 import { KanbanSection } from '@/components/dashboard/KanbanSection';
+import { TermsSection } from '@/components/legal/TermsSection';
 import { AiAssistantModal } from '@/components/ai/AiAssistantModal';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -210,7 +211,11 @@ export default function Home() {
         )}
 
         {/* TAB CONTENTS */}
+        {/* TAB 4: WALLET & ESCROW LEDGER */}
         {activeTab === 'wallet' && <WalletSection />}
+
+        {/* TAB 5: TERMS & GOVERNANCE */}
+        {activeTab === 'terms' && <TermsSection />}
         {activeTab === 'rentals' && <RentalSection />}
         {activeTab === 'kanban' && <KanbanSection />}
 
@@ -361,10 +366,25 @@ export default function Home() {
       </Modal>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950 py-8 mt-12">
-        <div className="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-2">
-          <p>© 2026 NexusPulse AI. Built with Next.js, Express TypeScript, MongoDB & Tailwind CSS.</p>
-          <p className="text-slate-600">Escrow Payments & Asset Rental System protected by End-to-End Cryptographic Ledger</p>
+      <footer className="border-t border-slate-800/80 bg-slate-950/90 py-10 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+            <div className="text-left">
+              <span className="text-base font-extrabold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">NexusPulse AI</span>
+              <p className="text-xs text-slate-400 mt-1">Autonomous Work, Smart Asset Rentals & Escrow Protected Payments Super-App</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-400">
+              <button onClick={() => setActiveTab('explore')} className="hover:text-indigo-400 transition-colors">Explore</button>
+              <button onClick={() => setActiveTab('rentals')} className="hover:text-indigo-400 transition-colors">Asset Rentals</button>
+              <button onClick={() => setActiveTab('kanban')} className="hover:text-indigo-400 transition-colors">Micro-Tasks</button>
+              <button onClick={() => setActiveTab('wallet')} className="hover:text-indigo-400 transition-colors">Wallet & Escrow</button>
+              <button onClick={() => setActiveTab('terms')} className="hover:text-indigo-400 transition-colors">Terms of Service</button>
+            </div>
+          </div>
+          <div className="text-center text-xs text-slate-500 space-y-1">
+            <p>© 2026 NexusPulse AI. Built with Next.js, Express TypeScript, MongoDB & Tailwind CSS.</p>
+            <p className="text-slate-600">Protected by End-to-End Cryptographic Escrow Ledger & Gemini AI Dispute Mediation</p>
+          </div>
         </div>
       </footer>
     </div>

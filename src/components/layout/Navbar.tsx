@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { ShieldCheck, Wallet, Sparkles, Car, Briefcase, User as UserIcon, LogOut, Loader2 } from 'lucide-react';
+import { ShieldCheck, Wallet, Sparkles, Car, Briefcase, User as UserIcon, LogOut, Loader2, FileText } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 interface NavbarProps {
@@ -71,7 +71,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
-            <Wallet className="w-3.5 h-3.5" /> Wallet & Escrow
+            <Wallet className="w-3.5 h-3.5" /> Escrow Wallet
+          </button>
+
+          <button
+            onClick={() => setActiveTab('terms')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              activeTab === 'terms'
+                ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5" /> Terms & Rules
           </button>
         </nav>
 
