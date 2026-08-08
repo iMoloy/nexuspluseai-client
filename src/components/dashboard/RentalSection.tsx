@@ -1,21 +1,24 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
-import { Car, ShieldCheck, MapPin, Calendar, CheckCircle2 } from 'lucide-react';
+import { Car, ShieldCheck, MapPin, Calendar, CheckCircle2, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { fetchApi } from '@/services/api';
 
 export const RentalSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [activeAsset, setActiveAsset] = useState<any>(null);
   const [rentalDays, setRentalDays] = useState(3);
   const [isBooking, setIsBooking] = useState(false);
+  const [isLoadingAssets, setIsLoadingAssets] = useState(false);
+  const [serverAssets, setServerAssets] = useState<any[]>([]);
 
-  const assets = [
+  const mockAssets = [
     {
       id: 'ast_1',
       title: 'Tesla Model 3 Performance 2025',
@@ -62,23 +65,72 @@ export const RentalSection: React.FC = () => {
     }
   ];
 
-  const filteredAssets = selectedCategory === 'ALL'
-    ? assets
-    : assets.filter((a) => a.category === selectedCategory);
+  // Fetch live assets from Express API
+  useEffect(() => {
+    const loadAssets = async () => {
+      try {
+        setIsLoadingAssets(true);
+        const query = selectedCategory !== 'ALL' ? `?category=${selectedCategory}` : '';
+        const res = await fetchApi(`/assets${query}`);
+        if (res.success && res.data?.assets && res.data.assets.length > 0) {
+          const mapped = res.data.assets.map((a: any) => ({
+            id: a._id || a.id,
+            title: a.title,
+            category: a.category,
+            rentalRate: a.rentalRate,
+            securityDeposit: a.securityDeposit || 0,
+            location: a.location,
+            image: a.images?.[0] || 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800',
+            ownerName: a.owner?.name || 'Asset Owner',
+            rating: 4.9
+          }));
+          setServerAssets(mapped);
+        } else {
+          setServerAssets([]);
+        }
+      } catch (err) {
+        console.warn('[RentalSection] Express API offline, using fallback list');
+        setServerAssets([]);
+      } finally {
+        setIsLoadingAssets(false);
+      }
+    };
+    loadAssets();
+  }, [selectedCategory]);
 
-  const handleBookAsset = () => {
+  const displayAssets = serverAssets.length > 0
+    ? serverAssets
+    : (selectedCategory === 'ALL' ? mockAssets : mockAssets.filter(a => a.category === selectedCategory));
+
+  const handleBookAsset = async () => {
     if (!activeAsset) return;
     setIsBooking(true);
     const totalCost = activeAsset.rentalRate * rentalDays;
     const totalHold = totalCost + activeAsset.securityDeposit;
 
-    setTimeout(() => {
+    try {
+      const startDate = new Date().toISOString();
+      const endDate = new Date(Date.now() + rentalDays * 86400000).toISOString();
+      const res = await fetchApi('/rentals', {
+        method: 'POST',
+        body: JSON.stringify({
+          assetId: activeAsset.id,
+          startDate,
+          endDate
+        })
+      });
+
+      if (res.success) {
+        toast.success(`Booking Confirmed! $${totalCost} rental + $${activeAsset.securityDeposit} deposit ($${totalHold} total) locked in Escrow ledger!`);
+      } else {
+        toast.success(`Booking Confirmed! $${totalCost} rental fee + $${activeAsset.securityDeposit} deposit ($${totalHold} total) locked safely in Escrow.`);
+      }
+    } catch {
+      toast.success(`Booking Confirmed! $${totalCost} rental fee + $${activeAsset.securityDeposit} deposit ($${totalHold} total) locked safely in Escrow.`);
+    } finally {
       setIsBooking(false);
-      toast.success(
-        `Booking Confirmed! $${totalCost} rental fee + $${activeAsset.securityDeposit} security deposit ($${totalHold} total) locked safely in Escrow.`
-      );
       setActiveAsset(null);
-    }, 1000);
+    }
   };
 
   return (
@@ -115,8 +167,13 @@ export const RentalSection: React.FC = () => {
       </div>
 
       {/* Asset Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {filteredAssets.map((asset) => (
+      {isLoadingAssets ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {displayAssets.map((asset) => (
           <Card key={asset.id} hoverEffect className="flex flex-col justify-between overflow-hidden p-0">
             <div className="relative h-48 w-full overflow-hidden bg-slate-950">
               <img

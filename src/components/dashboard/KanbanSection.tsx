@@ -1,14 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { Briefcase, Lock, CheckCircle, Clock, ArrowRight, UserCheck, Send } from 'lucide-react';
+import { Briefcase, Lock, CheckCircle, Clock, ArrowRight, UserCheck, Send, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { fetchApi } from '@/services/api';
 
 export const KanbanSection: React.FC = () => {
-  const [tasks, setTasks] = useState([
+  const [isLoadingGigs, setIsLoadingGigs] = useState(false);
+
+  const initialMockTasks = [
     {
       id: 'gig_1',
       title: 'Design Dark Mode Glassmorphism Dashboard UI',
@@ -49,25 +52,59 @@ export const KanbanSection: React.FC = () => {
       applicantCount: 5,
       assignedFreelancer: 'Sharif Ahmed'
     }
-  ]);
+  ];
 
-  const moveTask = (taskId: string, newStatus: string) => {
-    setTasks((prev) =>
-      prev.map((t) => {
-        if (t.id === taskId) {
-          return { ...t, status: newStatus as any };
+  const [tasks, setTasks] = useState(initialMockTasks);
+
+  // Fetch live gigs from Express API
+  useEffect(() => {
+    const loadGigs = async () => {
+      try {
+        setIsLoadingGigs(true);
+        const res = await fetchApi('/gigs');
+        if (res.success && res.data?.gigs && res.data.gigs.length > 0) {
+          const mapped = res.data.gigs.map((g: any) => ({
+            id: g._id || g.id,
+            title: g.title,
+            category: g.category,
+            budget: g.budget,
+            clientName: g.client?.name || 'Client',
+            status: g.status || 'OPEN',
+            applicantCount: 3,
+            assignedFreelancer: g.assignedFreelancer?.name || null
+          }));
+          setTasks(mapped);
         }
-        return t;
-      })
+      } catch (err) {
+        console.warn('[KanbanSection] Express API offline, using fallback list');
+      } finally {
+        setIsLoadingGigs(false);
+      }
+    };
+    loadGigs();
+  }, []);
+
+  const moveTask = async (taskId: string, newStatus: string) => {
+    // Optimistic UI update
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, status: newStatus as any } : t))
     );
 
-    if (newStatus === 'IN_PROGRESS') {
-      toast.info('Freelancer assigned! Task moved to IN_PROGRESS.');
-    } else if (newStatus === 'UNDER_REVIEW') {
-      toast.info('Work proof submitted! Task moved to UNDER_REVIEW for Client approval.');
-    } else if (newStatus === 'COMPLETED') {
-      toast.success('Work approved by Client! Escrow payment released to Freelancer wallet.');
+    try {
+      if (newStatus === 'IN_PROGRESS') {
+        await fetchApi(`/gigs/${taskId}/assign`, { method: 'POST', body: JSON.stringify({ proposalId: 'prop_demo' }) });
+        toast.info('Freelancer assigned & Kanban updated to IN_PROGRESS');
+      } else if (newStatus === 'UNDER_REVIEW') {
+        await fetchApi(`/gigs/${taskId}/submit`, { method: 'POST', body: JSON.stringify({ proofSubmission: 'https://github.com/demo/proof' }) });
+        toast.info('Work submitted & Kanban updated to UNDER_REVIEW');
+      } else if (newStatus === 'COMPLETED') {
+        await fetchApi(`/gigs/${taskId}/approve`, { method: 'POST' });
+        toast.success('Gig Approved! Escrow Payment released to Freelancer & Status COMPLETED!');
+      }
+    } catch {
+      toast.info(`Kanban Status updated to ${newStatus}`);
     }
+  };
   };
 
   const columns = [
