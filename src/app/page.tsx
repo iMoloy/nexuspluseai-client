@@ -6,6 +6,9 @@ import { WalletSection } from '@/components/dashboard/WalletSection';
 import { RentalSection } from '@/components/dashboard/RentalSection';
 import { KanbanSection } from '@/components/dashboard/KanbanSection';
 import { TermsSection } from '@/components/legal/TermsSection';
+import { AboutSection } from '@/components/legal/AboutSection';
+import { ContactSection } from '@/components/legal/ContactSection';
+import { ProfileSection } from '@/components/user/ProfileSection';
 import { AiAssistantModal } from '@/components/ai/AiAssistantModal';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -216,6 +219,15 @@ export default function Home() {
 
         {/* TAB 5: TERMS & GOVERNANCE */}
         {activeTab === 'terms' && <TermsSection />}
+
+        {/* TAB 6: ABOUT US */}
+        {activeTab === 'about' && <AboutSection />}
+
+        {/* TAB 7: CONTACT US */}
+        {activeTab === 'contact' && <ContactSection />}
+
+        {/* TAB 8: USER PROFILE & SETTINGS */}
+        {activeTab === 'profile' && <ProfileSection />}
         {activeTab === 'rentals' && <RentalSection />}
         {activeTab === 'kanban' && <KanbanSection />}
 
@@ -378,6 +390,8 @@ export default function Home() {
               <button onClick={() => setActiveTab('rentals')} className="hover:text-indigo-400 transition-colors">Asset Rentals</button>
               <button onClick={() => setActiveTab('kanban')} className="hover:text-indigo-400 transition-colors">Micro-Tasks</button>
               <button onClick={() => setActiveTab('wallet')} className="hover:text-indigo-400 transition-colors">Wallet & Escrow</button>
+              <button onClick={() => setActiveTab('about')} className="hover:text-indigo-400 transition-colors">About Us</button>
+              <button onClick={() => setActiveTab('contact')} className="hover:text-indigo-400 transition-colors">Contact Us</button>
               <button onClick={() => setActiveTab('terms')} className="hover:text-indigo-400 transition-colors">Terms of Service</button>
             </div>
           </div>

@@ -96,7 +96,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : isAuthenticated && currentUser ? (
             /* Logged-in User Avatar + Logout */
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-2.5 py-1.5 rounded-xl">
+              <button
+                onClick={() => setActiveTab('profile')}
+                className="flex items-center gap-2 bg-slate-900 border border-slate-800 hover:border-indigo-500/50 px-2.5 py-1.5 rounded-xl transition-colors"
+                title="View Profile Settings"
+              >
                 {currentUser.avatar ? (
                   <Image
                     src={currentUser.avatar}
@@ -114,7 +118,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="text-xs font-semibold text-slate-200 hidden sm:inline max-w-[100px] truncate">
                   {currentUser.name}
                 </span>
-              </div>
+              </button>
               <button
                 onClick={logout}
                 disabled={isLoading}
