@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
-import { Car, ShieldCheck, MapPin, Calendar, CheckCircle2, Loader2 } from 'lucide-react';
+import { Car, ShieldCheck, MapPin, Calendar, CheckCircle2, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { fetchApi } from '@/services/api';
 
@@ -17,6 +17,8 @@ export const RentalSection: React.FC = () => {
   const [isBooking, setIsBooking] = useState(false);
   const [isLoadingAssets, setIsLoadingAssets] = useState(false);
   const [serverAssets, setServerAssets] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   const mockAssets = [
     // VEHICLE CATEGORY (10 ASSETS)
@@ -389,9 +391,17 @@ export const RentalSection: React.FC = () => {
     loadAssets();
   }, [selectedCategory]);
 
-  const displayAssets = serverAssets.length > 0
+  const allAssets = serverAssets.length > 0
     ? serverAssets
     : (selectedCategory === 'ALL' ? mockAssets : mockAssets.filter(a => a.category === selectedCategory));
+
+  const totalPages = Math.ceil(allAssets.length / itemsPerPage);
+  const displayAssets = allAssets.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    setCurrentPage(1);
+  };
 
   const handleBookAsset = async () => {
     if (!activeAsset) return;
@@ -441,17 +451,17 @@ export const RentalSection: React.FC = () => {
             { key: 'VEHICLE', label: 'Vehicles' },
             { key: 'TECH_EQUIPMENT', label: 'Tech & Cameras' },
             { key: 'WORKSPACE', label: 'Workspaces' }
-          ].map((cat) => (
+          ].map((tab) => (
             <button
-              key={cat.key}
-              onClick={() => setSelectedCategory(cat.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                selectedCategory === cat.key
-                  ? 'bg-indigo-600 text-white shadow-md'
+              key={tab.key}
+              onClick={() => handleCategoryChange(tab.key)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                selectedCategory === tab.key
+                  ? 'bg-indigo-600 text-white'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              {cat.label}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -470,6 +480,9 @@ export const RentalSection: React.FC = () => {
               <img
                 src={asset.image}
                 alt={asset.title}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute top-3 left-3">
@@ -502,6 +515,53 @@ export const RentalSection: React.FC = () => {
           </Card>
         ))}
       </div>
+      )}
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-4 border-t border-slate-800/80">
+          <div className="text-xs text-slate-400">
+            Showing <span className="font-semibold text-slate-200">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+            <span className="font-semibold text-slate-200">{Math.min(currentPage * itemsPerPage, allAssets.length)}</span> of{' '}
+            <span className="font-semibold text-indigo-400">{allAssets.length}</span> assets
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              leftIcon={<ChevronLeft className="w-4 h-4" />}
+            >
+              Previous
+            </Button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-colors ${
+                  currentPage === pageNum
+                    ? 'bg-indigo-600 text-white font-bold'
+                    : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
+                }`}
+              >
+                {pageNum}
+              </button>
+            ))}
+
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+              rightIcon={<ChevronRight className="w-4 h-4" />}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
       )}
 
       {/* Rental Booking Modal */}
