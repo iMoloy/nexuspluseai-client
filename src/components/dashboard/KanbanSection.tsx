@@ -127,7 +127,7 @@ export const KanbanSection: React.FC = () => {
         {columns.map((col) => {
           const colTasks = tasks.filter((t) => t.status === col.key);
           return (
-            <div key={col.key} className="flex flex-col gap-3 p-3 bg-slate-900/50 border border-slate-800/80 rounded-2xl min-h-[500px]">
+            <div key={col.key} className="flex flex-col gap-3 p-3 bg-slate-900/50 border border-slate-800/80 rounded-2xl h-auto">
               <div className="flex items-center justify-between px-2 py-1 pb-2 border-b border-slate-800">
                 <span className="text-sm font-bold text-slate-200 flex items-center gap-2">
                   {col.icon} {col.title}
@@ -135,7 +135,7 @@ export const KanbanSection: React.FC = () => {
                 <Badge variant={col.variant}>{colTasks.length}</Badge>
               </div>
 
-              <div className="space-y-3 flex-1 overflow-y-auto">
+              <div className="space-y-3">
                 {colTasks.map((gig) => (
                   <Card key={gig.id} className="p-4 bg-slate-900 border-slate-800 hover:border-slate-700">
                     <div className="flex items-center justify-between mb-2">
