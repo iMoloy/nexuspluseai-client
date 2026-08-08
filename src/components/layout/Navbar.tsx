@@ -73,17 +73,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Wallet className="w-3.5 h-3.5" /> Escrow Wallet
           </button>
-
-          <button
-            onClick={() => setActiveTab('terms')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === 'terms'
-                ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5" /> Terms & Rules
-          </button>
         </nav>
 
         {/* Right CTA Actions */}
