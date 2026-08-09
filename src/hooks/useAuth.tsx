@@ -75,7 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginWithGoogle = async () => {
     try {
       setIsLoading(true);
-      await signIn('google', { callbackUrl: '/' });
+      const callbackUrl = typeof window !== 'undefined' ? window.location.origin : '/';
+      await signIn('google', { callbackUrl });
     } catch (err) {
       console.error('Google login error:', err);
       toast.error('Google login failed. Please try again.');
