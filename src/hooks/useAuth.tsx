@@ -50,6 +50,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  useEffect(() => {
+    if (session?.user) {
+      const gUser: AuthUser = {
+        id: session.backendUser?.id || (session.user.email ? `usr_${session.user.email.replace(/[^a-zA-Z0-9]/g, '_')}` : 'usr_google'),
+        name: session.backendUser?.name || session.user.name || 'Google User',
+        email: session.backendUser?.email || session.user.email || '',
+        role: session.backendUser?.role || 'CLIENT',
+        avatar: session.backendUser?.avatar || session.user.image || undefined,
+        kycVerified: session.backendUser?.kycVerified ?? true,
+        authProvider: 'google'
+      };
+      setLocalUser(gUser);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('nexus_auth_user', JSON.stringify(gUser));
+      }
+    }
+  }, [session]);
+
   const isAuthenticated = (status === 'authenticated' || !!localUser) && isMounted;
   const isLoadingSession = status === 'loading' || !isMounted;
 
@@ -63,7 +81,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         kycVerified: session.backendUser.kycVerified,
         authProvider: session.backendUser.authProvider
       }
-    : localUser;
+    : (session?.user
+        ? {
+            id: session.user.email ? `usr_${session.user.email.replace(/[^a-zA-Z0-9]/g, '_')}` : 'usr_google',
+            name: session.user.name || 'Google User',
+            email: session.user.email || '',
+            role: 'CLIENT',
+            avatar: session.user.image || undefined,
+            kycVerified: true,
+            authProvider: 'google'
+          }
+        : localUser);
 
   const setAuthUser = (user: AuthUser) => {
     setLocalUser(user);
