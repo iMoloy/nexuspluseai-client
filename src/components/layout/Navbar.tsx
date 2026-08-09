@@ -23,18 +23,18 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { currentUser, isAuthenticated, isLoadingSession, logout, isLoading } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-black/85 border-b border-neutral-800/80">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-xl border-b" style={{ backgroundColor: 'var(--color-bg-overlay)', borderBottomColor: 'var(--color-border)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Logo />
 
         {/* Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-1 bg-black/80 p-1.5 rounded-2xl border border-indigo-500/20 backdrop-blur-xl">
+        <nav className="hidden md:flex items-center gap-1 p-1.5 rounded-2xl border backdrop-blur-xl" style={{ backgroundColor: 'var(--color-bg-elevated)', borderColor: 'var(--color-border)' }}>
           <button
             onClick={() => setActiveTab('explore')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
               activeTab === 'explore'
                 ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white font-bold shadow-lg shadow-indigo-600/30 border border-indigo-400/30'
-                : 'text-slate-400 hover:text-slate-100 hover:bg-neutral-900/80'
+                : 'text-slate-400 dark:hover:text-slate-100 hover:text-slate-700 hover:bg-slate-200/60 dark:hover:bg-neutral-900/80'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" /> Explore All
@@ -45,7 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
               activeTab === 'rentals'
                 ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white font-bold shadow-lg shadow-indigo-600/30 border border-indigo-400/30'
-                : 'text-slate-400 hover:text-slate-100 hover:bg-neutral-900/80'
+                : 'text-slate-400 dark:hover:text-slate-100 hover:text-slate-700 hover:bg-slate-200/60 dark:hover:bg-neutral-900/80'
             }`}
           >
             <Car className="w-3.5 h-3.5" /> Asset Rentals
@@ -56,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
               activeTab === 'kanban'
                 ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white font-bold shadow-lg shadow-indigo-600/30 border border-indigo-400/30'
-                : 'text-slate-400 hover:text-slate-100 hover:bg-neutral-900/80'
+                : 'text-slate-400 dark:hover:text-slate-100 hover:text-slate-700 hover:bg-slate-200/60 dark:hover:bg-neutral-900/80'
             }`}
           >
             <Briefcase className="w-3.5 h-3.5" /> Gig Kanban
@@ -67,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
               activeTab === 'wallet'
                 ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white font-bold shadow-lg shadow-indigo-600/30 border border-indigo-400/30'
-                : 'text-slate-400 hover:text-slate-100 hover:bg-neutral-900/80'
+                : 'text-slate-400 dark:hover:text-slate-100 hover:text-slate-700 hover:bg-slate-200/60 dark:hover:bg-neutral-900/80'
             }`}
           >
             <Wallet className="w-3.5 h-3.5" /> Escrow Wallet

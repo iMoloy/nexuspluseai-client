@@ -1,88 +1,592 @@
 @import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=satoshi@500,700&display=swap');
 @import "tailwindcss";
 
+/* =============================================
+   NEXUSPULSE AI — GLOBAL DESIGN TOKENS
+   Dark (default) + Light Theme System
+   ============================================= */
+
 @layer base {
-  :root, html.dark {
+  /* --- DARK MODE (Default) --- */
+  :root,
+  html.dark {
     color-scheme: dark;
-    --bg-main: #0B0F19;
-    --text-main: #F8FAFC;
+    --color-bg-base:       #07080F;
+    --color-bg-surface:    #0D1117;
+    --color-bg-elevated:   #111827;
+    --color-bg-overlay:    rgba(0, 0, 0, 0.85);
+    --color-bg-card:       #0F172A;
+    --color-bg-input:      #030712;
+    --color-border:        rgba(51, 65, 85, 0.8);
+    --color-border-subtle: rgba(30, 41, 59, 0.9);
+    --color-text-primary:  #F1F5F9;
+    --color-text-secondary:#94A3B8;
+    --color-text-muted:    #64748B;
+    --color-text-disabled: #475569;
+    --color-scrollbar-track: #07080F;
+    --color-scrollbar-thumb: #334155;
   }
 
+  /* --- LIGHT MODE --- */
   html.light {
     color-scheme: light;
-    --bg-main: #F8FAFC;
-    --text-main: #0F172A;
+    --color-bg-base:       #F1F5F9;
+    --color-bg-surface:    #FFFFFF;
+    --color-bg-elevated:   #F8FAFC;
+    --color-bg-overlay:    rgba(255, 255, 255, 0.92);
+    --color-bg-card:       #FFFFFF;
+    --color-bg-input:      #F8FAFC;
+    --color-border:        rgba(203, 213, 225, 0.9);
+    --color-border-subtle: rgba(226, 232, 240, 0.9);
+    --color-text-primary:  #0F172A;
+    --color-text-secondary:#475569;
+    --color-text-muted:    #64748B;
+    --color-text-disabled: #94A3B8;
+    --color-scrollbar-track: #E2E8F0;
+    --color-scrollbar-thumb: #94A3B8;
   }
 
+  /* --- BASE BODY --- */
   body {
-    font-family: 'General Sans', 'Satoshi', sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'General Sans', 'Satoshi', system-ui, sans-serif;
+    background-color: var(--color-bg-base);
+    color: var(--color-text-primary);
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* --- SMOOTH TRANSITIONS ON ALL INTERACTIVE ELEMENTS --- */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+  }
+
+  /* Exception: don't slow down animations */
+  .animate-spin,
+  .animate-pulse,
+  .animate-bounce,
+  [class*="transition-transform"],
+  [class*="duration-"],
+  [class*="delay-"] {
+    transition-property: transform, opacity;
   }
 }
 
-/* Light Theme Comprehensive Overrides */
-html.light .bg-slate-950,
+/* =============================================
+   LIGHT THEME — COMPREHENSIVE OVERRIDES
+   Targeting all hardcoded dark Tailwind classes
+   ============================================= */
+
+/* ── PAGE WRAPPERS ─────────────────────────── */
+html.light .min-h-screen,
+html.light .flex-1,
+html.light main {
+  background-color: var(--color-bg-base) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ── DARK BACKGROUNDS ─────────────────────── */
 html.light .bg-black,
-html.light .bg-slate-900,
-html.light .bg-slate-900\/50,
-html.light .bg-slate-900\/60,
-html.light .bg-slate-900\/80,
 html.light .bg-black\/60,
+html.light .bg-black\/70,
 html.light .bg-black\/80,
 html.light .bg-black\/85,
 html.light .bg-black\/90 {
-  background-color: #FFFFFF !important;
-  color: #0F172A !important;
+  background-color: var(--color-bg-surface) !important;
 }
 
-html.light header.bg-black\/85 {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  border-color: rgba(226, 232, 240, 0.9) !important;
+html.light .bg-slate-950,
+html.light .bg-slate-900,
+html.light .bg-slate-900\/50,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/70,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/90 {
+  background-color: var(--color-bg-elevated) !important;
 }
 
-html.light input,
-html.light select,
-html.light textarea {
-  background-color: #F1F5F9 !important;
-  color: #0F172A !important;
-  border-color: #CBD5E1 !important;
+html.light .bg-neutral-950,
+html.light .bg-neutral-950\/90,
+html.light .bg-neutral-900,
+html.light .bg-neutral-900\/80,
+html.light .bg-neutral-900\/90 {
+  background-color: var(--color-bg-elevated) !important;
 }
 
-html.light input::placeholder {
-  color: #64748B !important;
+/* ── STICKY/FIXED HEADER ──────────────────── */
+html.light header,
+html.light .sticky.top-0 {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-bottom-color: var(--color-border) !important;
+  box-shadow: 0 1px 12px rgba(0,0,0,0.08) !important;
+}
+
+/* Navbar nav pill */
+html.light nav.bg-black\/80,
+html.light nav[class*="bg-black"] {
+  background-color: rgba(241, 245, 249, 0.95) !important;
+  border-color: rgba(203, 213, 225, 0.8) !important;
+}
+
+/* Inactive nav buttons */
+html.light nav button:not([class*="from-indigo"]) {
+  color: var(--color-text-secondary) !important;
+}
+html.light nav button:not([class*="from-indigo"]):hover {
+  background-color: rgba(203, 213, 225, 0.5) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ── CARDS & PANELS ───────────────────────── */
+html.light .rounded-2xl,
+html.light .rounded-3xl {
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
+}
+
+/* Gradient cards (feature cards with bg-gradient-to-b) */
+html.light [class*="bg-gradient-to-b"][class*="slate-900"],
+html.light [class*="bg-gradient-to-b"][class*="indigo-950"],
+html.light [class*="bg-gradient-to-b"][class*="purple-950"],
+html.light [class*="bg-gradient-to-b"][class*="emerald-950"] {
+  background: linear-gradient(to bottom, rgba(238, 242, 255, 0.9), rgba(248, 250, 252, 1)) !important;
+}
+
+/* Section panels — How It Works, etc. */
+html.light .bg-neutral-950\/90 {
+  background-color: var(--color-bg-elevated) !important;
+}
+
+/* Slide spotlight pill */
+html.light .bg-slate-950\/80 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── BORDERS ──────────────────────────────── */
+html.light [class*="border-neutral-800"],
+html.light [class*="border-slate-800"],
+html.light [class*="border-slate-700"],
+html.light [class*="border-slate-900"],
+html.light [class*="border-neutral-700"] {
+  border-color: var(--color-border) !important;
+}
+
+html.light .border-b,
+html.light [class*="border-b "] {
+  border-bottom-color: var(--color-border-subtle) !important;
+}
+
+/* ── TEXT COLORS ──────────────────────────── */
+html.light .text-white {
+  color: var(--color-text-primary) !important;
 }
 
 html.light .text-slate-100,
-html.light .text-slate-200,
+html.light .text-slate-200 {
+  color: var(--color-text-primary) !important;
+}
+
 html.light .text-slate-300 {
-  color: #0F172A !important;
+  color: #334155 !important;
 }
 
 html.light .text-slate-400,
 html.light .text-slate-500 {
-  color: #475569 !important;
+  color: var(--color-text-secondary) !important;
 }
 
-html.light .border-neutral-800,
-html.light .border-slate-800,
-html.light .border-slate-700\/50,
-html.light .border-neutral-800\/80 {
+html.light .text-slate-600 {
+  color: var(--color-text-muted) !important;
+}
+
+/* Footer text */
+html.light footer .text-slate-400,
+html.light footer .text-slate-500,
+html.light footer .text-slate-600 {
+  color: var(--color-text-secondary) !important;
+}
+
+/* ── INPUTS, SELECTS, TEXTAREAS ───────────── */
+html.light input:not([type="file"]),
+html.light select,
+html.light textarea {
+  background-color: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+html.light input:not([type="file"]):focus,
+html.light select:focus,
+html.light textarea:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: var(--color-text-muted) !important;
+}
+
+/* ── MODALS ───────────────────────────────── */
+html.light [role="dialog"],
+html.light .fixed.inset-0 > div:last-child {
+  background-color: var(--color-bg-surface) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Modal backdrop */
+html.light .fixed.inset-0[class*="bg-black"] {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+}
+
+/* Auth modal tabs */
+html.light .flex.gap-2.p-1.bg-black {
+  background-color: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
+}
+
+html.light .flex.gap-2.p-1.bg-black button:not([class*="from-indigo"]):hover {
+  background-color: rgba(203, 213, 225, 0.6) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Divider "or sign in" text */
+html.light .bg-slate-900.px-3 {
+  background-color: var(--color-bg-surface) !important;
+  color: var(--color-text-muted) !important;
+}
+
+/* ── AUTH FORM LABELS ─────────────────────── */
+html.light label,
+html.light .block.text-xs.font-semibold {
+  color: var(--color-text-secondary) !important;
+}
+
+/* ── BUTTONS — Outline/Secondary ─────────── */
+html.light .bg-slate-900\/90,
+html.light .bg-slate-900\/80 {
+  background-color: rgba(241, 245, 249, 0.9) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+html.light .hover\:bg-slate-800:hover {
+  background-color: #E2E8F0 !important;
+}
+
+/* ── SLIDER CONTROLS ─────────────────────── */
+html.light .bg-slate-950\/60,
+html.light [class*="bg-slate-950\/6"] {
+  background-color: rgba(241, 245, 249, 0.8) !important;
+  border-color: var(--color-border) !important;
+}
+
+html.light .bg-slate-900\/80 {
+  background-color: rgba(248, 250, 252, 0.9) !important;
+  border-color: var(--color-border) !important;
+}
+
+html.light button[class*="bg-slate-900"][class*="rounded-full"] {
+  background-color: var(--color-bg-elevated) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+/* Inactive slide dots */
+html.light .bg-slate-700,
+html.light .hover\:bg-slate-500:hover {
+  background-color: #CBD5E1 !important;
+}
+
+/* ── FOOTER ───────────────────────────────── */
+html.light footer {
+  background: linear-gradient(to bottom, #F1F5F9, #E2E8F0) !important;
+  border-top-color: rgba(203, 213, 225, 0.8) !important;
+}
+
+html.light footer .pb-10.border-b {
+  border-bottom-color: #CBD5E1 !important;
+}
+
+html.light footer h4 {
+  color: var(--color-text-primary) !important;
+}
+
+html.light footer ul li button {
+  color: var(--color-text-secondary) !important;
+}
+
+html.light footer ul li button:hover {
+  color: var(--color-text-primary) !important;
+}
+
+html.light footer p {
+  color: var(--color-text-secondary) !important;
+}
+
+/* Payment badges in footer */
+html.light .bg-slate-900\/80.border.border-slate-700\/60 {
+  background-color: #FFFFFF !important;
   border-color: #E2E8F0 !important;
 }
 
-/* Custom Scrollbar */
+/* ── GLASSMORPHISM / BACKDROP BLUR ELEMENTS ─ */
+html.light [class*="backdrop-blur"] {
+  --tw-backdrop-brightness: brightness(1.05);
+}
+
+/* ── GLOW / MESH GRADIENT ACCENTS ────────── */
+html.light .bg-gradient-to-tr.from-neutral-900\/40 {
+  display: none !important;
+}
+
+/* ── WALLET / DASHBOARD CARDS ─────────────  */
+html.light .p-6.rounded-2xl,
+html.light .p-4.rounded-2xl,
+html.light .p-3.rounded-xl {
+  background-color: var(--color-bg-surface) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ── KANBAN / RENTAL FILTER PILLS ─────────  */
+html.light .bg-black\/80.p-1\.5.rounded-xl,
+html.light [class*="bg-black/80"][class*="rounded-xl"] {
+  background-color: rgba(241, 245, 249, 0.95) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── ACTIVITY / TRANSACTION ROWS ─────────── */
+html.light .bg-black\/60.border.border-neutral-800,
+html.light [class*="bg-black/60"] {
+  background-color: var(--color-bg-elevated) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── PROFILE SECTION CARD ─────────────────  */
+html.light .border-4.border-slate-900 {
+  border-color: #E2E8F0 !important;
+}
+
+html.light .bg-slate-950 {
+  background-color: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ── HERO SECTION — keep readable ────────── */
+/* Hero has its own bg image so we don't override the image overlay */
+html.light section[class*="min-h-"][class*="rounded-3xl"] .bg-gradient-to-r {
+  opacity: 0.75 !important;
+}
+
+html.light section[class*="min-h-"] h1.text-white {
+  color: #FFFFFF !important; /* Keep hero title white on image */
+}
+
+html.light section[class*="min-h-"] p.text-slate-200 {
+  color: #E2E8F0 !important; /* Keep hero subtitle light on image */
+}
+
+/* ── BADGE / TAG PILLS (non-colored) ───────  */
+html.light .bg-indigo-500\/10 {
+  background-color: rgba(99, 102, 241, 0.12) !important;
+}
+
+/* ── AI ASSISTANT MODAL TEXTAREA ──────────  */
+html.light .bg-slate-950.border.border-slate-800,
+html.light textarea.bg-slate-950 {
+  background-color: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── PROFILE IMAGE UPLOAD SECTION ─────────  */
+html.light .bg-slate-950.hover\:bg-slate-800 {
+  background-color: var(--color-bg-elevated) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── RENTAL SECTION CARDS ─────────────────  */
+html.light .card,
+html.light [class*="rounded-2xl"][class*="border"] {
+  background-color: var(--color-bg-surface) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Card image gradient overlay — lighter in light mode */
+html.light .bg-gradient-to-t.from-slate-950 {
+  background: linear-gradient(to top, rgba(255,255,255,0.8), transparent) !important;
+}
+
+/* Rental category tab filter */
+html.light [class*="bg-black/80"][class*="rounded-xl"] {
+  background-color: var(--color-bg-elevated) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* Rental card bottom meta row */
+html.light .border-t.border-slate-800\/80 {
+  border-top-color: var(--color-border) !important;
+}
+
+/* Rating badge overlay on card images */
+html.light .bg-slate-950\/80 {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: var(--color-border) !important;
+  color: #92400e !important;
+}
+
+/* ── KANBAN SECTION ────────────────────────  */
+html.light .bg-slate-900\/40 {
+  background-color: var(--color-bg-elevated) !important;
+}
+
+/* Kanban column headers and cards */
+html.light [class*="rounded-2xl"][class*="bg-slate-900"] {
+  background-color: var(--color-bg-surface) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* Kanban task cards */
+html.light [class*="rounded-xl"][class*="bg-black/60"] {
+  background-color: var(--color-bg-elevated) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── WALLET SECTION ────────────────────────  */
+html.light [class*="bg-emerald-950"],
+html.light [class*="bg-emerald-950\/"] {
+  background-color: rgba(236, 253, 245, 1) !important;
+}
+
+html.light [class*="bg-indigo-950"],
+html.light [class*="bg-indigo-950\/"] {
+  background-color: rgba(238, 242, 255, 1) !important;
+}
+
+html.light [class*="bg-purple-950"],
+html.light [class*="bg-purple-950\/"] {
+  background-color: rgba(250, 245, 255, 1) !important;
+}
+
+/* ── PROFILE SECTION ──────────────────────  */
+html.light .border-4.border-slate-900 {
+  border-color: #E2E8F0 !important;
+}
+
+html.light .bg-slate-950 {
+  background-color: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Profile bio textarea */
+html.light textarea.bg-slate-950 {
+  background-color: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── LEGAL / ABOUT / CONTACT SECTIONS ─────  */
+html.light .text-slate-100 {
+  color: var(--color-text-primary) !important;
+}
+
+html.light .text-slate-200 {
+  color: var(--color-text-primary) !important;
+}
+
+html.light .text-slate-300 {
+  color: #334155 !important;
+}
+
+/* Contact form textarea */
+html.light .bg-slate-950.resize-none {
+  background-color: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── CARD COMPONENT BASE ──────────────────  */
+/* This catches the Card.tsx component which likely uses bg-slate-900 */
+html.light section > div > [class*="border"],
+html.light main > div > [class*="border"] {
+  border-color: var(--color-border);
+}
+
+/* ── SECTION HEADING TEXTS ────────────────  */
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light h5 {
+  color: var(--color-text-primary);
+}
+
+html.light p:not([class*="text-indigo"]):not([class*="text-emerald"]):not([class*="text-purple"]):not([class*="text-amber"]):not([class*="text-rose"]):not([class*="text-green"]):not([class*="text-sky"]):not([class*="text-white"]):not([class*="text-slate-100"]):not([class*="text-slate-200"]) {
+  color: var(--color-text-secondary);
+}
+
+/* ── FEATURE CARD ICON WRAPPERS ───────────  */
+html.light .bg-indigo-600\/20 {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+}
+html.light .bg-purple-600\/20 {
+  background-color: rgba(147, 51, 234, 0.15) !important;
+}
+html.light .bg-emerald-600\/20 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+/* ── STEP CIRCLES (How It Works) ──────────  */
+html.light .flex.flex-col.items-center h5 {
+  color: var(--color-text-primary) !important;
+}
+html.light .flex.flex-col.items-center p {
+  color: var(--color-text-secondary) !important;
+}
+
+/* ── "PLATFORM CAPABILITIES" SECTION ─────  */
+html.light h3.text-2xl,
+html.light h3.text-4xl {
+  color: var(--color-text-primary) !important;
+}
+
+/* ── HOW IT WORKS PANEL ───────────────────  */
+html.light .bg-neutral-950\/90 {
+  background-color: var(--color-bg-surface) !important;
+  border-color: var(--color-border) !important;
+}
+
+html.light .bg-neutral-950\/90 h3 {
+  color: var(--color-text-primary) !important;
+}
+
+/* ── CUSTOM SCROLLBAR ─────────────────────  */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-main);
+  background: var(--color-scrollbar-track);
 }
 ::-webkit-scrollbar-thumb {
-  background: #64748B;
+  background: var(--color-scrollbar-thumb);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
+}
+
+/* ── SELECTION COLOR ──────────────────────  */
+::selection {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+html.light ::selection {
+  background: #4f46e5;
+  color: #ffffff;
 }

@@ -168,7 +168,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-slate-100 flex flex-col selection:bg-indigo-600 selection:text-white relative">
+    <div className="min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white relative" style={{ backgroundColor: 'var(--color-bg-base)', color: 'var(--color-text-primary)' }}>
       {/* Premium Dark Obsidian Mesh Glow Accents */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-tr from-neutral-900/40 via-indigo-950/20 to-emerald-950/20 blur-[130px] pointer-events-none" />
 
@@ -254,7 +254,7 @@ export default function Home() {
                 </div>
 
                 {/* Live Metrics */}
-                <div className="grid grid-cols-3 gap-2 pt-4 border-t border-slate-800/80 max-w-lg">
+                <div className="grid grid-cols-3 gap-2 pt-4 max-w-lg" style={{ borderTop: '1px solid rgba(100,116,139,0.3)' }}>
                   <div>
                     <div className="text-lg sm:text-xl font-extrabold text-white">$2.5M+</div>
                     <div className="text-[10px] text-slate-300 font-semibold">Escrow Locked</div>
@@ -436,15 +436,16 @@ export default function Home() {
       <Modal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} title={authMode === 'LOGIN' ? 'Sign In to NexusPulse AI' : 'Create a New Account'}>
         <div className="space-y-4">
           {/* Mode Switcher (Login / Register Tabs) */}
-          <div className="flex gap-2 p-1 bg-black rounded-xl border border-neutral-800">
+          <div className="flex gap-2 p-1 rounded-xl border" style={{ backgroundColor: 'var(--color-bg-elevated)', borderColor: 'var(--color-border)' }}>
             <button
               type="button"
               onClick={() => setAuthMode('LOGIN')}
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
                 authMode === 'LOGIN'
                   ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white shadow-lg border border-indigo-400/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-neutral-900/80'
+                  : ''
               }`}
+              style={authMode !== 'LOGIN' ? { color: 'var(--color-text-secondary)' } : {}}
             >
               Sign In
             </button>
@@ -454,8 +455,9 @@ export default function Home() {
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
                 authMode === 'REGISTER'
                   ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white shadow-lg border border-indigo-400/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-neutral-900/80'
+                  : ''
               }`}
+              style={authMode !== 'REGISTER' ? { color: 'var(--color-text-secondary)' } : {}}
             >
               Register
             </button>
@@ -483,10 +485,10 @@ export default function Home() {
           {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-800" />
+              <div className="w-full" style={{ borderTop: '1px solid var(--color-border)' }} />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-slate-900 px-3 text-slate-500">
+              <span className="px-3 text-xs" style={{ backgroundColor: 'var(--color-bg-surface)', color: 'var(--color-text-muted)' }}>
                 {authMode === 'LOGIN' ? 'or sign in with email' : 'or register with email'}
               </span>
             </div>
@@ -504,11 +506,12 @@ export default function Home() {
                   onChange={(e) => setAuthName(e.target.value)}
                 />
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-300">Account Type / Role</label>
+                  <label className="block text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>Account Type / Role</label>
                   <select
                     value={authRole}
                     onChange={(e) => setAuthRole(e.target.value as 'CLIENT' | 'FREELANCER' | 'ASSET_OWNER')}
-                    className="w-full bg-slate-950 text-slate-200 text-sm px-3.5 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500"
+                    style={{ backgroundColor: 'var(--color-bg-input)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+                    className="w-full text-sm px-3.5 py-2.5 rounded-xl border focus:outline-none focus:border-indigo-500"
                   >
                     <option value="CLIENT">Client (Hire Freelancers & Rent Assets)</option>
                     <option value="FREELANCER">Freelancer (Work on Gigs)</option>
@@ -516,9 +519,9 @@ export default function Home() {
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-300">Profile Picture (Local File or URL)</label>
+                  <label className="block text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>Profile Picture (Local File or URL)</label>
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                    <label className="flex items-center justify-center gap-2 px-3 py-2 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-semibold text-indigo-400 cursor-pointer transition-colors shrink-0">
+                    <label style={{ backgroundColor: 'var(--color-bg-elevated)', borderColor: 'var(--color-border)' }} className="flex items-center justify-center gap-2 px-3 py-2 hover:bg-opacity-80 border rounded-xl text-xs font-semibold text-indigo-400 cursor-pointer transition-colors shrink-0">
                       {isUploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-indigo-400" /> : <Upload className="w-4 h-4 text-indigo-400" />}
                       <span>{isUploadingImage ? 'Uploading...' : 'Choose File'}</span>
                       <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={isUploadingImage} />
@@ -528,7 +531,8 @@ export default function Home() {
                       placeholder="or paste ImgBB / Image URL"
                       value={authAvatar}
                       onChange={(e) => setAuthAvatar(e.target.value)}
-                      className="w-full sm:flex-1 bg-black text-slate-200 text-xs px-3 py-2 rounded-xl border border-neutral-800 focus:outline-none focus:border-indigo-500"
+                      style={{ backgroundColor: 'var(--color-bg-input)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+                      className="w-full sm:flex-1 text-xs px-3 py-2 rounded-xl border focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   {authAvatar && (
@@ -561,7 +565,7 @@ export default function Home() {
           </form>
 
           {/* Toggle Footer */}
-          <div className="text-center pt-1 text-xs text-slate-400">
+          <div className="text-center pt-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
             {authMode === 'LOGIN' ? (
               <span>Don&apos;t have an account? <button type="button" onClick={() => setAuthMode('REGISTER')} className="text-indigo-400 hover:underline font-semibold">Register here</button></span>
             ) : (
@@ -572,20 +576,20 @@ export default function Home() {
       </Modal>
 
       {/* Footer */}
-      <footer className="border-t border-indigo-500/20 bg-gradient-to-b from-neutral-950 via-black to-black py-16 mt-20 shadow-2xl relative overflow-hidden">
+      <footer className="border-t py-16 mt-20 shadow-2xl relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, var(--color-bg-surface), var(--color-bg-elevated))', borderTopColor: 'var(--color-border)' }}>
         {/* Glow Effects in Footer */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
           {/* Top Grid (Brand info, Navigation columns, Newsletter) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-neutral-800/80">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10" style={{ borderBottom: '1px solid var(--color-border)' }}>
             {/* Column 1 & 2: Brand Info & Escrow Security Badge */}
             <div className="lg:col-span-2 space-y-4">
               <div className="flex items-center gap-2">
                 <Logo />
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
+              <p className="text-xs leading-relaxed max-w-sm" style={{ color: 'var(--color-text-secondary)' }}>
                 NexusPulse AI is an autonomous Web3-ready super-app connecting creators, freelancers, and luxury asset owners through cryptographic Escrow ledgers and Gemini AI dispute mediation.
               </p>
               <div className="pt-2 flex items-center gap-3">
@@ -601,7 +605,7 @@ export default function Home() {
             {/* Column 3: Platform Ecosystem */}
             <div className="space-y-3">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-indigo-400">Ecosystem</h4>
-              <ul className="space-y-2 text-xs font-semibold text-slate-400">
+              <ul className="space-y-2 text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
                 <li><button onClick={() => setActiveTab('explore')} className="hover:text-white transition-colors flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-indigo-400" /> Explore All</button></li>
                 <li><button onClick={() => setActiveTab('rentals')} className="hover:text-white transition-colors flex items-center gap-1.5"><Car className="w-3 h-3 text-sky-400" /> Asset Rentals</button></li>
                 <li><button onClick={() => setActiveTab('kanban')} className="hover:text-white transition-colors flex items-center gap-1.5"><Briefcase className="w-3 h-3 text-amber-400" /> Gig Kanban</button></li>
@@ -612,7 +616,7 @@ export default function Home() {
             {/* Column 4: Quick Links & Legal */}
             <div className="space-y-3">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-purple-400">Company & Legal</h4>
-              <ul className="space-y-2 text-xs font-semibold text-slate-400">
+              <ul className="space-y-2 text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
                 <li><button onClick={() => setActiveTab('about')} className="hover:text-white transition-colors">About NexusPulse</button></li>
                 <li><button onClick={() => setActiveTab('contact')} className="hover:text-white transition-colors">24/7 Support & Contact</button></li>
                 <li><button onClick={() => setActiveTab('terms')} className="hover:text-white transition-colors">Terms of Escrow</button></li>
@@ -623,24 +627,25 @@ export default function Home() {
             {/* Column 5: Newsletter & Updates */}
             <div className="space-y-3">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-emerald-400">Stay Updated</h4>
-              <p className="text-xs text-slate-400">Get instant alerts for new luxury rentals and high-paying Escrow gigs.</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>Get instant alerts for new luxury rentals and high-paying Escrow gigs.</p>
               <div className="space-y-2">
                 <div className="flex gap-2">
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="w-full bg-black/90 text-slate-200 text-xs px-3 py-2 rounded-xl border border-neutral-800 focus:outline-none focus:border-indigo-500"
+                    style={{ backgroundColor: 'var(--color-bg-input)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+                    className="w-full text-xs px-3 py-2 rounded-xl border focus:outline-none focus:border-indigo-500"
                   />
                   <Button variant="primary" size="sm">Join</Button>
                 </div>
-                <span className="text-[11px] text-slate-500 block">No spam. Unsubscribe at any time.</span>
+                <span className="text-[11px] block" style={{ color: 'var(--color-text-muted)' }}>No spam. Unsubscribe at any time.</span>
               </div>
             </div>
           </div>
 
           {/* Bottom Bar: Copyright, Payment Methods & Socials */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-            <div className="text-center sm:text-left text-xs text-slate-500 space-y-1">
+            <div className="text-center sm:text-left text-xs space-y-1" style={{ color: 'var(--color-text-muted)' }}>
               <p>© 2026 NexusPulse AI. Built with Next.js, Express TypeScript, MongoDB & Tailwind CSS.</p>
               <p className="text-slate-600">Protected by End-to-End Cryptographic Escrow Ledger & Gemini AI Dispute Mediation</p>
             </div>

@@ -113,20 +113,22 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
     <Modal isOpen={isOpen} onClose={onClose} title="NexusPulse AI Assistant & Dispute Mediator">
       <div className="space-y-4">
         {/* Mode Selector */}
-        <div className="flex gap-2 p-1 bg-slate-950 rounded-xl border border-slate-800">
+        <div className="flex gap-2 p-1 rounded-xl border" style={{ backgroundColor: 'var(--color-bg-elevated)', borderColor: 'var(--color-border)' }}>
           <button
             onClick={() => { setActiveMode('GENERATOR'); setResultData(null); }}
             className={`flex-1 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors ${
-              activeMode === 'GENERATOR' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              activeMode === 'GENERATOR' ? 'bg-indigo-600 text-white' : ''
             }`}
+            style={activeMode !== 'GENERATOR' ? { color: 'var(--color-text-secondary)' } : {}}
           >
             <Sparkles className="w-3.5 h-3.5" /> AI Task Spec Generator
           </button>
           <button
             onClick={() => { setActiveMode('DISPUTE'); setResultData(null); }}
             className={`flex-1 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors ${
-              activeMode === 'DISPUTE' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              activeMode === 'DISPUTE' ? 'bg-purple-600 text-white' : ''
             }`}
+            style={activeMode !== 'DISPUTE' ? { color: 'var(--color-text-secondary)' } : {}}
           >
             <ShieldAlert className="w-3.5 h-3.5" /> AI Dispute Mediator
           </button>
@@ -153,26 +155,26 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
 
         {/* Result Output */}
         {resultData && (
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+          <div className="p-4 rounded-xl border space-y-3" style={{ backgroundColor: 'var(--color-bg-elevated)', borderColor: 'var(--color-border)' }}>
             {activeMode === 'GENERATOR' ? (
               <>
-                <h4 className="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+                <h4 className="text-sm font-bold flex items-center gap-1.5" style={{ color: 'var(--color-text-primary)' }}>
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" /> {resultData.title}
                 </h4>
-                <p className="text-xs text-slate-400">{resultData.description}</p>
-                <div className="flex justify-between items-center text-xs pt-2 border-t border-slate-800">
-                  <span className="text-slate-400">Suggested Budget: <strong className="text-emerald-400">${resultData.suggestedBudget}</strong></span>
-                  <span className="text-slate-400">Timeframe: <strong className="text-indigo-300">{resultData.estimatedDays} Days</strong></span>
+                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{resultData.description}</p>
+                <div className="flex justify-between items-center text-xs pt-2" style={{ borderTop: '1px solid var(--color-border)' }}>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>Suggested Budget: <strong className="text-emerald-500">${resultData.suggestedBudget}</strong></span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>Timeframe: <strong className="text-indigo-400">{resultData.estimatedDays} Days</strong></span>
                 </div>
               </>
             ) : (
               <>
-                <div className="flex justify-between items-center text-sm font-bold border-b border-slate-800 pb-2">
-                  <span className="text-emerald-400">Freelancer Share: {resultData.freelancerShare}%</span>
-                  <span className="text-amber-400">Client Refund: {resultData.clientRefund}%</span>
+                <div className="flex justify-between items-center text-sm font-bold pb-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <span className="text-emerald-500">Freelancer Share: {resultData.freelancerShare}%</span>
+                  <span className="text-amber-500">Client Refund: {resultData.clientRefund}%</span>
                 </div>
-                <p className="text-xs text-slate-300">{resultData.rationale}</p>
-                <div className="p-2.5 rounded-lg bg-indigo-950/40 text-xs text-indigo-300 border border-indigo-500/20">
+                <p className="text-xs" style={{ color: 'var(--color-text-primary)' }}>{resultData.rationale}</p>
+                <div className="p-2.5 rounded-lg bg-indigo-500/10 text-xs text-indigo-400 border border-indigo-500/20">
                   <strong>Recommendation:</strong> {resultData.recommendation}
                 </div>
               </>

@@ -29,9 +29,9 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variants = {
     primary: 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:brightness-110 border border-indigo-400/40',
-    secondary: 'bg-black/80 text-slate-200 hover:text-white hover:bg-neutral-900 border border-neutral-800 hover:border-indigo-500/40 shadow-lg shadow-black/80 backdrop-blur-xl',
-    outline: 'border border-indigo-500/40 text-indigo-300 hover:text-white hover:bg-indigo-950/40 backdrop-blur-xl hover:border-indigo-400 shadow-md',
-    ghost: 'text-slate-400 hover:text-slate-100 hover:bg-neutral-900/80 backdrop-blur-md',
+    secondary: 'text-slate-200 border shadow-lg backdrop-blur-xl [background-color:var(--color-bg-elevated)] [border-color:var(--color-border)] hover:border-indigo-500/40 [color:var(--color-text-primary)]',
+    outline: 'border border-indigo-500/40 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/20 backdrop-blur-xl hover:border-indigo-400 shadow-md',
+    ghost: '[color:var(--color-text-secondary)] hover:[color:var(--color-text-primary)] hover:[background-color:var(--color-bg-elevated)] backdrop-blur-md',
     danger: 'bg-gradient-to-r from-rose-600 to-pink-600 text-white hover:brightness-110 shadow-xl shadow-rose-600/25 border border-rose-400/30'
   };
 
