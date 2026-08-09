@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Logo } from '@/components/ui/Logo';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Sparkles, ShieldCheck, Car, Briefcase, Loader2, Upload, Image as ImageIcon, Cpu, Lock, Layers, Globe, ChevronLeft, ChevronRight, Wallet } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
@@ -665,6 +666,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      <ThemeToggle />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { SessionProvider } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from '@/hooks/useAuth';
+import { ThemeProvider } from '@/context/ThemeContext';
 import { useSSE } from '@/hooks/useSSE';
 
 function SSEListener() {
@@ -28,24 +29,26 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <SessionProvider>
-      <AuthProvider>
-        <SSEListener />
-        <QueryClientProvider client={queryClient}>
-          {children}
-          <ToastContainer
-            position="bottom-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-          />
-        </QueryClientProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <SSEListener />
+          <QueryClientProvider client={queryClient}>
+            {children}
+            <ToastContainer
+              position="bottom-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
+          </QueryClientProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </SessionProvider>
   );
 }
