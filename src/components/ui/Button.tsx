@@ -25,30 +25,89 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-bold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95';
+  const baseStyles = [
+    'inline-flex items-center justify-center font-bold rounded-xl',
+    'transition-all duration-200 ease-out',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:ring-offset-2',
+    'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
+    'active:scale-95 select-none',
+    'relative overflow-hidden', // for shimmer
+  ].join(' ');
 
   const variants = {
-    primary: 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:brightness-110 border border-indigo-400/40',
-    secondary: 'text-slate-200 border shadow-lg backdrop-blur-xl [background-color:var(--color-bg-elevated)] [border-color:var(--color-border)] hover:border-indigo-500/40 [color:var(--color-text-primary)]',
-    outline: 'border border-indigo-500/40 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/20 backdrop-blur-xl hover:border-indigo-400 shadow-md',
-    ghost: '[color:var(--color-text-secondary)] hover:[color:var(--color-text-primary)] hover:[background-color:var(--color-bg-elevated)] backdrop-blur-md',
-    danger: 'bg-gradient-to-r from-rose-600 to-pink-600 text-white hover:brightness-110 shadow-xl shadow-rose-600/25 border border-rose-400/30'
+    primary: [
+      'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500',
+      'text-white border border-indigo-400/40',
+      'shadow-lg shadow-indigo-600/25',
+      'hover:shadow-xl hover:shadow-indigo-500/40',
+      'hover:brightness-110 hover:scale-[1.03]',
+      'hover:border-indigo-300/60',
+    ].join(' '),
+
+    secondary: [
+      '[background-color:var(--color-bg-elevated)]',
+      '[color:var(--color-text-primary)]',
+      '[border-color:var(--color-border)]',
+      'border shadow-md backdrop-blur-xl',
+      'hover:[background-color:var(--color-bg-surface)]',
+      'hover:border-indigo-500/50',
+      'hover:shadow-lg hover:shadow-indigo-500/10',
+      'hover:scale-[1.02]',
+    ].join(' '),
+
+    outline: [
+      'border border-indigo-500/40',
+      'text-indigo-400 backdrop-blur-xl',
+      'shadow-sm',
+      'hover:bg-indigo-500/10',
+      'hover:text-indigo-300',
+      'hover:border-indigo-400',
+      'hover:shadow-md hover:shadow-indigo-500/20',
+      'hover:scale-[1.02]',
+    ].join(' '),
+
+    ghost: [
+      '[color:var(--color-text-secondary)]',
+      'hover:[color:var(--color-text-primary)]',
+      'hover:[background-color:var(--color-bg-elevated)]',
+      'hover:scale-[1.02]',
+      'hover:shadow-sm',
+      'backdrop-blur-md',
+    ].join(' '),
+
+    danger: [
+      'bg-gradient-to-r from-rose-600 to-pink-600',
+      'text-white border border-rose-400/30',
+      'shadow-lg shadow-rose-600/20',
+      'hover:shadow-xl hover:shadow-rose-500/40',
+      'hover:brightness-110 hover:scale-[1.03]',
+      'hover:border-rose-300/60',
+    ].join(' '),
   };
 
   const sizes = {
     sm: 'text-xs px-3 py-1.5 gap-1.5',
     md: 'text-sm px-4 py-2.5 gap-2',
-    lg: 'text-base px-6 py-3 gap-2.5'
+    lg: 'text-base px-6 py-3 gap-2.5',
   };
 
   return (
     <motion.button
-      whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
-      whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
+      whileHover={{ scale: disabled || isLoading ? 1 : 1.03 }}
+      whileTap={{ scale: disabled || isLoading ? 1 : 0.96 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
       className={cn(baseStyles, variants[variant], sizes[size], className)}
       disabled={disabled || isLoading}
       {...props}
     >
+      {/* Shimmer overlay on hover for primary/danger */}
+      {(variant === 'primary' || variant === 'danger') && (
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 -translate-x-full hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-[-20deg] pointer-events-none"
+        />
+      )}
+
       {isLoading ? (
         <Loader2 className="w-4 h-4 animate-spin text-current" />
       ) : (
