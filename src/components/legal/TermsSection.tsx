@@ -41,7 +41,7 @@ export const TermsSection: React.FC = () => {
             <ShieldCheck className="w-5 h-5 text-emerald-400" /> 3. Asset Rental Policies & Liability
           </h3>
           <p className="text-sm text-slate-300 leading-relaxed">
-            Renters must verify identity (KYC) prior to booking vehicles or cinema equipment. Security deposits are automatically released back to the renter's wallet within 24 hours of successful owner inspection.
+            Renters must verify identity (KYC) prior to booking vehicles or cinema equipment. Security deposits are automatically released back to the renter&apos;s wallet within 24 hours of successful owner inspection.
           </p>
         </Card>
 

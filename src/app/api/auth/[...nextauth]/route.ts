@@ -1,6 +1,21 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
+export interface BackendUserData {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  avatar?: string;
+  kycVerified?: boolean;
+  authProvider?: string;
+}
+
+interface ExtendedUser {
+  backendAccessToken?: string;
+  backendUser?: BackendUserData;
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -33,8 +48,9 @@ export const authOptions: NextAuthOptions = {
           const data = await response.json();
           if (data.success) {
             // Attach our JWT to the user object for token callback
-            (user as any).backendAccessToken = data.data.accessToken;
-            (user as any).backendUser = data.data.user;
+            const extUser = user as unknown as ExtendedUser;
+            extUser.backendAccessToken = data.data.accessToken;
+            extUser.backendUser = data.data.user;
             return true;
           }
           return false;
@@ -48,15 +64,16 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user }) {
       if (user) {
-        token.backendAccessToken = (user as any).backendAccessToken;
-        token.backendUser = (user as any).backendUser;
+        const extUser = user as unknown as ExtendedUser;
+        token.backendAccessToken = extUser.backendAccessToken;
+        token.backendUser = extUser.backendUser;
       }
       return token;
     },
 
     async session({ session, token }) {
       session.backendAccessToken = token.backendAccessToken as string;
-      session.backendUser = token.backendUser as any;
+      session.backendUser = token.backendUser as BackendUserData;
       return session;
     }
   },

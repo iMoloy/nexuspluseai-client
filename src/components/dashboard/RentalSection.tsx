@@ -11,13 +11,38 @@ import { toast } from 'react-toastify';
 import { fetchApi } from '@/services/api';
 import { BrandBadge } from '@/components/ui/BrandBadge';
 
+export interface RentalAsset {
+  id: string;
+  title: string;
+  category: string;
+  rentalRate: number;
+  securityDeposit: number;
+  location: string;
+  image: string;
+  ownerName: string;
+  brandLogo?: string;
+  rating?: number;
+}
+
+interface ServerAssetResponseItem {
+  _id?: string;
+  id?: string;
+  title: string;
+  category: string;
+  rentalRate: number;
+  securityDeposit?: number;
+  location: string;
+  images?: string[];
+  owner?: { name?: string };
+}
+
 export const RentalSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
-  const [activeAsset, setActiveAsset] = useState<any>(null);
+  const [activeAsset, setActiveAsset] = useState<RentalAsset | null>(null);
   const [rentalDays, setRentalDays] = useState(3);
   const [isBooking, setIsBooking] = useState(false);
   const [isLoadingAssets, setIsLoadingAssets] = useState(false);
-  const [serverAssets, setServerAssets] = useState<any[]>([]);
+  const [serverAssets, setServerAssets] = useState<RentalAsset[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
@@ -377,8 +402,8 @@ export const RentalSection: React.FC = () => {
         const query = selectedCategory !== 'ALL' ? `?category=${selectedCategory}` : '';
         const res = await fetchApi(`/assets${query}`);
         if (res.success && res.data?.assets && res.data.assets.length > 0) {
-          const mapped = res.data.assets.map((a: any) => ({
-            id: a._id || a.id,
+          const mapped: RentalAsset[] = res.data.assets.map((a: ServerAssetResponseItem) => ({
+            id: a._id || a.id || `asset_${Math.random()}`,
             title: a.title,
             category: a.category,
             rentalRate: a.rentalRate,
@@ -392,7 +417,7 @@ export const RentalSection: React.FC = () => {
         } else {
           setServerAssets([]);
         }
-      } catch (err) {
+      } catch {
         console.warn('[RentalSection] Express API offline, using fallback list');
         setServerAssets([]);
       } finally {

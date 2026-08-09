@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { Sparkles, ShieldCheck, Zap, Users, Globe, Cpu, Award } from 'lucide-react';
+import { Sparkles, ShieldCheck, Globe, Cpu } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {
   return (

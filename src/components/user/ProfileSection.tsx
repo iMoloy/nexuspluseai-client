@@ -6,15 +6,10 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import {
-  User,
   ShieldCheck,
-  Mail,
-  Briefcase,
-  Upload,
   Key,
   CheckCircle2,
   Calendar,
-  Wallet,
   Star,
   Award,
   Loader2,
@@ -74,6 +69,10 @@ export const ProfileSection: React.FC = () => {
         method: 'PUT',
         body: JSON.stringify({ name, email, avatar, bio, phone, location, skills })
       });
+
+      if (res.success) {
+        toast.success('Profile updated on server');
+      }
 
       if (currentUser) {
         setAuthUser({

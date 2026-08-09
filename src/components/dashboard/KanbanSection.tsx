@@ -8,17 +8,41 @@ import { Briefcase, Lock, CheckCircle, Clock, ArrowRight, UserCheck, Send, Loade
 import { toast } from 'react-toastify';
 import { fetchApi } from '@/services/api';
 
+export type GigStatus = 'OPEN' | 'IN_PROGRESS' | 'UNDER_REVIEW' | 'COMPLETED';
+
+export interface GigTask {
+  id: string;
+  title: string;
+  category: string;
+  budget: number;
+  clientName: string;
+  status: GigStatus;
+  applicantCount: number;
+  assignedFreelancer: string | null;
+}
+
+interface ServerGigResponseItem {
+  _id?: string;
+  id?: string;
+  title: string;
+  category: string;
+  budget: number;
+  client?: { name?: string };
+  status?: GigStatus;
+  assignedFreelancer?: { name?: string };
+}
+
 export const KanbanSection: React.FC = () => {
   const [isLoadingGigs, setIsLoadingGigs] = useState(false);
 
-  const initialMockTasks = [
+  const initialMockTasks: GigTask[] = [
     {
       id: 'gig_1',
       title: 'Design Dark Mode Glassmorphism Dashboard UI',
       category: 'UI/UX Design',
       budget: 350,
       clientName: 'Moloy Paul',
-      status: 'OPEN', // OPEN | IN_PROGRESS | UNDER_REVIEW | COMPLETED
+      status: 'OPEN',
       applicantCount: 4,
       assignedFreelancer: null
     },
@@ -54,7 +78,7 @@ export const KanbanSection: React.FC = () => {
     }
   ];
 
-  const [tasks, setTasks] = useState(initialMockTasks);
+  const [tasks, setTasks] = useState<GigTask[]>(initialMockTasks);
 
   // Fetch live gigs from Express API
   useEffect(() => {
@@ -63,8 +87,8 @@ export const KanbanSection: React.FC = () => {
         setIsLoadingGigs(true);
         const res = await fetchApi('/gigs');
         if (res.success && res.data?.gigs && res.data.gigs.length > 0) {
-          const mapped = res.data.gigs.map((g: any) => ({
-            id: g._id || g.id,
+          const mapped: GigTask[] = res.data.gigs.map((g: ServerGigResponseItem) => ({
+            id: g._id || g.id || `gig_${Math.random()}`,
             title: g.title,
             category: g.category,
             budget: g.budget,
@@ -75,7 +99,7 @@ export const KanbanSection: React.FC = () => {
           }));
           setTasks(mapped);
         }
-      } catch (err) {
+      } catch {
         console.warn('[KanbanSection] Express API offline, using fallback list');
       } finally {
         setIsLoadingGigs(false);
@@ -84,10 +108,10 @@ export const KanbanSection: React.FC = () => {
     loadGigs();
   }, []);
 
-  const moveTask = async (taskId: string, newStatus: string) => {
+  const moveTask = async (taskId: string, newStatus: GigStatus) => {
     // Optimistic UI update
     setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, status: newStatus as any } : t))
+      prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
     );
 
     try {
@@ -99,10 +123,10 @@ export const KanbanSection: React.FC = () => {
         toast.info('Work submitted & Kanban updated to UNDER_REVIEW');
       } else if (newStatus === 'COMPLETED') {
         await fetchApi(`/gigs/${taskId}/approve`, { method: 'POST' });
-        toast.success('Gig Approved! Escrow Payment released to Freelancer & Status COMPLETED!');
+        toast.success('Work approved & Escrow payment released to freelancer!');
       }
     } catch {
-      toast.info(`Kanban Status updated to ${newStatus}`);
+      toast.info(`Status updated to ${newStatus}`);
     }
   };
 
@@ -115,11 +139,18 @@ export const KanbanSection: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-100 flex items-center gap-2">
-          <Briefcase className="w-6 h-6 text-indigo-400" /> Micro-Tasking & Interactive Kanban Board
-        </h2>
-        <p className="text-sm text-slate-400">Post gigs with Escrow budget locking and track live work progress from request to completion</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-100 flex items-center gap-2">
+            <Briefcase className="w-6 h-6 text-indigo-400" /> Micro-Tasking & Interactive Kanban Board
+          </h2>
+          <p className="text-sm text-slate-400">Post gigs with Escrow budget locking and track live work progress from request to completion</p>
+        </div>
+        {isLoadingGigs && (
+          <div className="flex items-center gap-2 text-xs text-indigo-400 font-semibold bg-indigo-950/60 px-3 py-1.5 rounded-xl border border-indigo-500/30">
+            <Loader2 className="w-4 h-4 animate-spin" /> Updating Gigs...
+          </div>
+        )}
       </div>
 
       {/* Kanban Columns */}

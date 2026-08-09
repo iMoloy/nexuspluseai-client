@@ -14,8 +14,9 @@ export const uploadToImgBB = async (imageFile: File): Promise<string> => {
       return data.data.url;
     }
     throw new Error(data.error?.message || 'Failed to upload image to ImgBB');
-  } catch (error: any) {
-    console.error('[ImgBB Upload Error]', error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown upload error';
+    console.error('[ImgBB Upload Error]', message);
     // Return Unsplash avatar fallback if API key fails
     return URL.createObjectURL(imageFile);
   }

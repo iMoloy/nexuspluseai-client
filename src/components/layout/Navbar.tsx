@@ -4,8 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { ShieldCheck, Wallet, Sparkles, Car, Briefcase, User as UserIcon, LogOut, Loader2, FileText } from 'lucide-react';
+import { Wallet, Sparkles, Car, Briefcase, User as UserIcon, LogOut, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 interface NavbarProps {

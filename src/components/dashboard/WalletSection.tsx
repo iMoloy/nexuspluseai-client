@@ -4,9 +4,19 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { Wallet, ShieldCheck, ArrowDownLeft, ArrowUpRight, Lock, RefreshCw, Plus, Loader2, CreditCard, Building2, Smartphone, TrendingUp } from 'lucide-react';
+import { Wallet, ShieldCheck, ArrowDownLeft, ArrowUpRight, Lock, RefreshCw, Plus, TrendingUp } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { fetchApi } from '@/services/api';
+
+interface ApiTransactionItem {
+  _id?: string;
+  id?: string;
+  type: string;
+  amount: number;
+  description?: string;
+  createdAt?: string;
+  status: string;
+}
 
 export const WalletSection: React.FC = () => {
   const [balance, setBalance] = useState(1250);
@@ -14,7 +24,6 @@ export const WalletSection: React.FC = () => {
   const [depositAmount, setDepositAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'STRIPE' | 'BKASH' | 'NAGAD' | 'BANK'>('STRIPE');
   const [isDepositing, setIsDepositing] = useState(false);
-
   const [isLoadingWallet, setIsLoadingWallet] = useState(false);
 
   const initialMockTransactions = [
@@ -27,39 +36,42 @@ export const WalletSection: React.FC = () => {
   const [transactions, setTransactions] = useState(initialMockTransactions);
 
   // Fetch live wallet balance and transactions from Express API
-  useEffect(() => {
-    const loadWalletData = async () => {
-      try {
-        setIsLoadingWallet(true);
-        const [balRes, txRes] = await Promise.all([
-          fetchApi('/wallet/balance'),
-          fetchApi('/wallet/transactions')
-        ]);
+  const loadWalletData = async () => {
+    try {
+      setIsLoadingWallet(true);
+      const [balRes, txRes] = await Promise.all([
+        fetchApi('/wallet/balance'),
+        fetchApi('/wallet/transactions')
+      ]);
 
-        if (balRes.success && balRes.data) {
-          setBalance(balRes.data.balance ?? 1250);
-          setEscrowHold(balRes.data.escrowHold ?? 500);
-        }
-
-        if (txRes.success && txRes.data?.transactions && txRes.data.transactions.length > 0) {
-          const mapped = txRes.data.transactions.map((tx: any) => ({
-            id: tx._id || tx.id,
-            type: tx.type,
-            amount: tx.amount,
-            title: tx.description || `${tx.type} Transaction`,
-            date: new Date(tx.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            status: tx.status,
-            isLock: tx.type === 'ESCROW_LOCK' || tx.type === 'WITHDRAW'
-          }));
-          setTransactions(mapped);
-        }
-      } catch (err) {
-        console.warn('[WalletSection] Express API offline, using fallback state');
-      } finally {
-        setIsLoadingWallet(false);
+      if (balRes.success && balRes.data) {
+        setBalance(balRes.data.balance ?? 1250);
+        setEscrowHold(balRes.data.escrowHold ?? 500);
       }
-    };
-    loadWalletData();
+
+      if (txRes.success && txRes.data?.transactions && txRes.data.transactions.length > 0) {
+        const mapped = txRes.data.transactions.map((tx: ApiTransactionItem) => ({
+          id: tx._id || tx.id || `tx_${Math.random()}`,
+          type: tx.type,
+          amount: tx.amount,
+          title: tx.description || `${tx.type} Transaction`,
+          date: new Date(tx.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          status: tx.status,
+          isLock: tx.type === 'ESCROW_LOCK' || tx.type === 'WITHDRAW'
+        }));
+        setTransactions(mapped);
+      }
+    } catch {
+      console.warn('[WalletSection] Express API offline, using fallback state');
+    } finally {
+      setIsLoadingWallet(false);
+    }
+  };
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      loadWalletData();
+    });
   }, []);
 
   const handleDeposit = async () => {

@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Logo } from '@/components/ui/Logo';
-import { Sparkles, ShieldCheck, Car, Briefcase, Zap, Star, Loader2, Upload, Image as ImageIcon, Cpu, Lock, ArrowRight, CheckCircle2, Layers, Repeat, Globe, ChevronLeft, ChevronRight, Wallet, CreditCard } from 'lucide-react';
+import { Sparkles, ShieldCheck, Car, Briefcase, Loader2, Upload, Image as ImageIcon, Cpu, Lock, Layers, Globe, ChevronLeft, ChevronRight, Wallet } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
 import { uploadToImgBB } from '@/lib/imgbb';
@@ -86,7 +86,7 @@ export default function Home() {
       const uploadedUrl = await uploadToImgBB(file);
       setAuthAvatar(uploadedUrl);
       toast.success('Profile image uploaded to ImgBB successfully!');
-    } catch (err: any) {
+    } catch {
       toast.error('Failed to upload image. Please try again or paste a link.');
     } finally {
       setIsUploadingImage(false);
@@ -149,7 +149,7 @@ export default function Home() {
         });
         toast.success(authMode === 'REGISTER' ? `Account registered successfully for ${name}!` : `Welcome back, ${name}!`);
       }
-    } catch (error) {
+    } catch {
       // Offline / Direct Client Fallback Login
       setAuthUser({
         id: `usr_${authEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
@@ -421,7 +421,7 @@ export default function Home() {
                     3
                   </div>
                   <h5 className="text-sm font-bold text-slate-200">Approve & Release Payment</h5>
-                  <p className="text-xs text-slate-400">Upon approval, funds are instantly released to provider's wallet.</p>
+                  <p className="text-xs text-slate-400">Upon approval, funds are instantly released to provider&apos;s wallet.</p>
                 </div>
               </div>
             </section>
@@ -506,7 +506,7 @@ export default function Home() {
                   <label className="block text-xs font-semibold text-slate-300">Account Type / Role</label>
                   <select
                     value={authRole}
-                    onChange={(e) => setAuthRole(e.target.value as any)}
+                    onChange={(e) => setAuthRole(e.target.value as 'CLIENT' | 'FREELANCER' | 'ASSET_OWNER')}
                     className="w-full bg-slate-950 text-slate-200 text-sm px-3.5 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500"
                   >
                     <option value="CLIENT">Client (Hire Freelancers & Rent Assets)</option>
@@ -562,7 +562,7 @@ export default function Home() {
           {/* Toggle Footer */}
           <div className="text-center pt-1 text-xs text-slate-400">
             {authMode === 'LOGIN' ? (
-              <span>Don't have an account? <button type="button" onClick={() => setAuthMode('REGISTER')} className="text-indigo-400 hover:underline font-semibold">Register here</button></span>
+              <span>Don&apos;t have an account? <button type="button" onClick={() => setAuthMode('REGISTER')} className="text-indigo-400 hover:underline font-semibold">Register here</button></span>
             ) : (
               <span>Already have an account? <button type="button" onClick={() => setAuthMode('LOGIN')} className="text-indigo-400 hover:underline font-semibold">Sign In</button></span>
             )}

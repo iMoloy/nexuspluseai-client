@@ -43,7 +43,7 @@ export function useSSE() {
         eventSource?.close();
       };
     } catch (err) {
-      console.warn('[useSSE] Realtime SSE Stream unavailable');
+      console.warn('[useSSE] Realtime SSE Stream unavailable:', err);
     }
 
     return () => {

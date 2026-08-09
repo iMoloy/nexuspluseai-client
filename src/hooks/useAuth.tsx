@@ -27,20 +27,25 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const emptySubscribe = () => () => {};
+const useIsMounted = () => React.useSyncExternalStore(emptySubscribe, () => true, () => false);
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data: session, status } = useSession();
   const [localUser, setLocalUser] = useState<AuthUser | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const isMounted = useIsMounted();
 
   useEffect(() => {
-    setIsMounted(true);
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('nexus_auth_user');
       if (saved) {
         try {
-          setLocalUser(JSON.parse(saved));
-        } catch {}
+          const parsed = JSON.parse(saved);
+          queueMicrotask(() => setLocalUser(parsed));
+        } catch (err) {
+          console.error('Failed to parse saved user:', err);
+        }
       }
     }
   }, []);
@@ -71,7 +76,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setIsLoading(true);
       await signIn('google', { callbackUrl: '/' });
-    } catch (error) {
+    } catch (err) {
+      console.error('Google login error:', err);
       toast.error('Google login failed. Please try again.');
       setIsLoading(false);
     }

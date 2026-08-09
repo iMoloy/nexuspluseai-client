@@ -8,6 +8,22 @@ import { Sparkles, Bot, CheckCircle2, ShieldAlert, Cpu } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { fetchApi } from '@/services/api';
 
+export interface AiResultData {
+  title?: string;
+  description?: string;
+  suggestedBudget?: number;
+  tags?: string[];
+  requiredSkills?: string[];
+  tasks?: Array<{ title: string; duration: string }>;
+  settlementScore?: number;
+  recommendation?: string;
+  summary?: string;
+  estimatedDays?: number;
+  freelancerShare?: number;
+  clientRefund?: number;
+  rationale?: string;
+}
+
 export interface AiAssistantModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -17,7 +33,7 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
   const [activeMode, setActiveMode] = useState<'GENERATOR' | 'DISPUTE'>('GENERATOR');
   const [prompt, setPrompt] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [resultData, setResultData] = useState<any>(null);
+  const [resultData, setResultData] = useState<AiResultData | null>(null);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
