@@ -31,32 +31,26 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === 'google') {
         try {
           // Sync Google user with our Express backend
-          const response = await fetch(
-            `${process.env.NEXTAUTH_BACKEND_URL || 'http://localhost:5000/api/v1'}/auth/google-sync`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                googleId: account.providerAccountId,
-                email: user.email,
-                name: user.name,
-                avatar: user.image
-              })
-            }
-          );
+          const backendUrl = process.env.NEXTAUTH_BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+          const response = await fetch(`${backendUrl}/auth/google-sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              googleId: account.providerAccountId,
+              email: user.email,
+              name: user.name,
+              avatar: user.image
+            })
+          });
 
           const data = await response.json();
-          if (data.success) {
-            // Attach our JWT to the user object for token callback
+          if (data.success && data.data) {
             const extUser = user as unknown as ExtendedUser;
             extUser.backendAccessToken = data.data.accessToken;
             extUser.backendUser = data.data.user;
-            return true;
           }
-          return false;
         } catch (err) {
-          console.error('[NextAuth] Backend sync failed:', err);
-          return false;
+          console.warn('[NextAuth] Backend sync failed, proceeding with Google profile fallback:', err);
         }
       }
       return true;
