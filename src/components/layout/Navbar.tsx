@@ -63,6 +63,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
+            onClick={() => setActiveTab('driver')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              activeTab === 'driver'
+                ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-white font-bold shadow-lg shadow-indigo-600/30 border border-indigo-400/30'
+                : 'text-slate-400 dark:hover:text-slate-100 hover:text-slate-700 hover:bg-slate-200/60 dark:hover:bg-neutral-900/80'
+            }`}
+          >
+            <Car className="w-3.5 h-3.5" /> Driver Hub
+          </button>
+
+          <button
             onClick={() => setActiveTab('wallet')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
               activeTab === 'wallet'

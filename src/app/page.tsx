@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { WalletSection } from '@/components/dashboard/WalletSection';
 import { RentalSection } from '@/components/dashboard/RentalSection';
 import { KanbanSection } from '@/components/dashboard/KanbanSection';
+import { DriverDashboard } from '@/components/dashboard/DriverDashboard';
 import { TermsSection } from '@/components/legal/TermsSection';
 import { AboutSection } from '@/components/legal/AboutSection';
 import { ContactSection } from '@/components/legal/ContactSection';
@@ -28,7 +29,7 @@ export default function Home() {
   const [authName, setAuthName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
-  const [authRole, setAuthRole] = useState<'CLIENT' | 'FREELANCER' | 'ASSET_OWNER'>('CLIENT');
+  const [authRole, setAuthRole] = useState<'CLIENT' | 'FREELANCER' | 'ASSET_OWNER' | 'DRIVER'>('CLIENT');
   const [authAvatar, setAuthAvatar] = useState('');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -344,6 +345,7 @@ export default function Home() {
         {activeTab === 'profile' && <ProfileSection />}
         {activeTab === 'rentals' && <RentalSection />}
         {activeTab === 'kanban' && <KanbanSection />}
+        {activeTab === 'driver' && <DriverDashboard />}
 
         {activeTab === 'explore' && (
           <div className="space-y-16">
@@ -509,13 +511,14 @@ export default function Home() {
                   <label className="block text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>Account Type / Role</label>
                   <select
                     value={authRole}
-                    onChange={(e) => setAuthRole(e.target.value as 'CLIENT' | 'FREELANCER' | 'ASSET_OWNER')}
+                    onChange={(e) => setAuthRole(e.target.value as 'CLIENT' | 'FREELANCER' | 'ASSET_OWNER' | 'DRIVER')}
                     style={{ backgroundColor: 'var(--color-bg-input)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
                     className="w-full text-sm px-3.5 py-2.5 rounded-xl border focus:outline-none focus:border-indigo-500"
                   >
                     <option value="CLIENT">Client (Hire Freelancers & Rent Assets)</option>
                     <option value="FREELANCER">Freelancer (Work on Gigs)</option>
                     <option value="ASSET_OWNER">Asset Owner (List Vehicles & Tech)</option>
+                    <option value="DRIVER">Driver (Passenger Rides & Tasks)</option>
                   </select>
                 </div>
                 <div className="space-y-1.5">
