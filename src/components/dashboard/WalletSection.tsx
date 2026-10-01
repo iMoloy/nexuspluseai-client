@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { Wallet, ShieldCheck, ArrowDownLeft, ArrowUpRight, Lock, RefreshCw, Plus, TrendingUp } from 'lucide-react';
+import { Wallet, ShieldCheck, ArrowDownLeft, ArrowUpRight, Lock, RefreshCw, Plus, TrendingUp, CreditCard, Banknote, ArrowRightLeft } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { fetchApi } from '@/services/api';
 
@@ -23,7 +23,8 @@ export const WalletSection: React.FC = () => {
   const [escrowHold, setEscrowHold] = useState(500);
   const [depositAmount, setDepositAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'STRIPE' | 'BKASH' | 'NAGAD' | 'BANK'>('STRIPE');
-  const [isDepositing, setIsDepositing] = useState(false);
+  const [transactionMode, setTransactionMode] = useState<'DEPOSIT' | 'WITHDRAW'>('WITHDRAW');
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isLoadingWallet, setIsLoadingWallet] = useState(false);
 
   const initialMockTransactions = [
@@ -74,49 +75,50 @@ export const WalletSection: React.FC = () => {
     });
   }, []);
 
-  const handleDeposit = async () => {
+  const handleTransaction = async () => {
     const val = parseFloat(depositAmount);
     if (isNaN(val) || val <= 0) {
-      toast.error('Please enter a valid deposit amount');
+      toast.error('Please enter a valid amount');
       return;
     }
 
-    setIsDepositing(true);
-    try {
-      const res = await fetchApi('/wallet/deposit', {
-        method: 'POST',
-        body: JSON.stringify({ amount: val, paymentMethod })
-      });
+    if (transactionMode === 'WITHDRAW' && val > balance) {
+      toast.error('Insufficient available balance for withdrawal');
+      return;
+    }
 
-      if (res.success && res.data) {
-        setBalance(res.data.balance);
-        setEscrowHold(res.data.escrowHold);
-        if (res.data.transaction) {
-          setTransactions((prev) => [
-            {
-              id: res.data.transaction._id || `tx_dep_${prev.length + 1}`,
-              type: 'DEPOSIT',
-              amount: val,
-              title: `${paymentMethod === 'STRIPE' ? 'Stripe Credit Card' : paymentMethod} Wallet Deposit`,
-              date: 'Just now',
-              status: 'COMPLETED',
-              isLock: false
-            },
-            ...prev
-          ]);
-        }
+    setIsProcessing(true);
+    
+    // Simulate network delay for realistic feel
+    setTimeout(() => {
+      if (transactionMode === 'DEPOSIT') {
+        setBalance(prev => prev + val);
+        setTransactions(prev => [{
+          id: `tx_${Date.now()}`,
+          type: 'DEPOSIT',
+          amount: val,
+          title: `Wallet Deposit via ${paymentMethod}`,
+          date: 'Just now',
+          status: 'COMPLETED',
+          isLock: false
+        }, ...prev]);
         toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
       } else {
-        setBalance((prev) => prev + val);
-        toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
+        setBalance(prev => prev - val);
+        setTransactions(prev => [{
+          id: `tx_${Date.now()}`,
+          type: 'INSTANT_PAYOUT',
+          amount: val,
+          title: `Instant Payout to ${paymentMethod}`,
+          date: 'Just now',
+          status: 'COMPLETED',
+          isLock: true
+        }, ...prev]);
+        toast.success(`Instant payout of $${val.toFixed(2)} to ${paymentMethod} successful!`);
       }
-    } catch {
-      setBalance((prev) => prev + val);
-      toast.success(`Successfully deposited $${val.toFixed(2)} into your Wallet!`);
-    } finally {
-      setIsDepositing(false);
+      setIsProcessing(false);
       setDepositAmount('');
-    }
+    }, 1500);
   };
 
   return (
@@ -142,9 +144,22 @@ export const WalletSection: React.FC = () => {
         </Card>
 
         <Card className="border-emerald-500/30 flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Deposit Funds</span>
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex bg-black/60 p-1 rounded-lg border border-neutral-800">
+              <button 
+                onClick={() => setTransactionMode('WITHDRAW')}
+                className={`px-3 py-1 text-[10px] font-bold rounded-md transition-colors ${transactionMode === 'WITHDRAW' ? 'bg-emerald-500 text-white' : 'text-slate-400 hover:text-white'}`}
+              >
+                PAYOUT
+              </button>
+              <button 
+                onClick={() => setTransactionMode('DEPOSIT')}
+                className={`px-3 py-1 text-[10px] font-bold rounded-md transition-colors ${transactionMode === 'DEPOSIT' ? 'bg-indigo-500 text-white' : 'text-slate-400 hover:text-white'}`}
+              >
+                DEPOSIT
+              </button>
+            </div>
+            <ArrowRightLeft className={`w-4 h-4 ${transactionMode === 'WITHDRAW' ? 'text-emerald-400' : 'text-indigo-400'}`} />
           </div>
 
           <div className="space-y-2">
@@ -177,10 +192,17 @@ export const WalletSection: React.FC = () => {
                 placeholder="Amount ($)"
                 value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
-                className="w-full bg-black/80 text-white text-sm px-3 py-2 rounded-xl border border-neutral-800 focus:outline-none focus:border-emerald-500"
+                className={`w-full bg-black/80 text-white text-sm px-3 py-2 rounded-xl border border-neutral-800 focus:outline-none ${transactionMode === 'WITHDRAW' ? 'focus:border-emerald-500' : 'focus:border-indigo-500'}`}
               />
-              <Button variant="primary" size="sm" onClick={handleDeposit} isLoading={isDepositing} leftIcon={<Plus className="w-4 h-4" />}>
-                Deposit
+              <Button 
+                variant="primary" 
+                size="sm" 
+                onClick={handleTransaction} 
+                isLoading={isProcessing} 
+                className={transactionMode === 'WITHDRAW' ? 'bg-emerald-600 hover:bg-emerald-500 text-white whitespace-nowrap' : 'bg-indigo-600 hover:bg-indigo-500 text-white whitespace-nowrap'}
+                leftIcon={transactionMode === 'WITHDRAW' ? <Banknote className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+              >
+                {transactionMode === 'WITHDRAW' ? 'Withdraw' : 'Deposit'}
               </Button>
             </div>
           </div>
