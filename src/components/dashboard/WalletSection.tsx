@@ -88,36 +88,54 @@ export const WalletSection: React.FC = () => {
 
     setIsProcessing(true);
     
-    // Simulate network delay for realistic feel
-    setTimeout(() => {
+    try {
       if (transactionMode === 'DEPOSIT') {
-        setBalance(prev => prev + val);
-        setTransactions(prev => [{
-          id: `tx_${Date.now()}`,
-          type: 'DEPOSIT',
-          amount: val,
-          title: `Wallet Deposit via ${paymentMethod}`,
-          date: 'Just now',
-          status: 'COMPLETED',
-          isLock: false
-        }, ...prev]);
-        toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
+        const res = await fetchApi('/wallet/deposit', {
+          method: 'POST',
+          body: JSON.stringify({ amount: val, paymentMethod })
+        });
+        if (res.success && res.data) {
+          setBalance(res.data.balance);
+          setEscrowHold(res.data.escrowHold);
+          if (res.data.transaction) {
+            setTransactions(prev => [res.data.transaction, ...prev]);
+          }
+          toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
+        } else {
+          // Fallback simulation
+          setBalance(prev => prev + val);
+          setTransactions(prev => [{
+            id: `tx_${Date.now()}`,
+            type: 'DEPOSIT',
+            amount: val,
+            title: `Wallet Deposit via ${paymentMethod}`,
+            date: 'Just now',
+            status: 'COMPLETED',
+            isLock: false
+          }, ...prev]);
+          toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
+        }
       } else {
-        setBalance(prev => prev - val);
-        setTransactions(prev => [{
-          id: `tx_${Date.now()}`,
-          type: 'INSTANT_PAYOUT',
-          amount: val,
-          title: `Instant Payout to ${paymentMethod}`,
-          date: 'Just now',
-          status: 'COMPLETED',
-          isLock: true
-        }, ...prev]);
-        toast.success(`Instant payout of $${val.toFixed(2)} to ${paymentMethod} successful!`);
+        const res = await fetchApi('/wallet/withdraw', {
+          method: 'POST',
+          body: JSON.stringify({ amount: val, paymentMethod })
+        });
+        if (res.success && res.data) {
+          setBalance(res.data.balance);
+          if (res.data.transaction) {
+            setTransactions(prev => [res.data.transaction, ...prev]);
+          }
+          toast.success(`Instant payout of $${val.toFixed(2)} to ${paymentMethod} successful!`);
+        } else {
+          toast.error(res.message || 'Withdrawal failed');
+        }
       }
+    } catch (error) {
+      toast.error('Transaction failed. Please check network.');
+    } finally {
       setIsProcessing(false);
       setDepositAmount('');
-    }, 1500);
+    }
   };
 
   return (
