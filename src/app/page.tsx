@@ -7,6 +7,7 @@ import { RentalSection } from '@/components/dashboard/RentalSection';
 import { KanbanSection } from '@/components/dashboard/KanbanSection';
 import { DriverDashboard } from '@/components/dashboard/DriverDashboard';
 import { AiFareCalculator } from '@/components/dashboard/AiFareCalculator';
+import { EmergencySOS } from '@/components/dashboard/EmergencySOS';
 import { TermsSection } from '@/components/legal/TermsSection';
 import { AboutSection } from '@/components/legal/AboutSection';
 import { ContactSection } from '@/components/legal/ContactSection';
@@ -676,6 +677,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      <EmergencySOS />
       <ThemeToggle />
     </div>
   );
