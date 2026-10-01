@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Car, Package, MapPin, Navigation, Clock, ShieldCheck, Zap } from 'lucide-react';
+import { Car, Package, MapPin, Navigation, Clock, ShieldCheck, Zap, Camera, Scan, CheckCircle2, Loader2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'react-toastify';
 
@@ -9,6 +9,18 @@ export const DriverDashboard: React.FC = () => {
   const [mode, setMode] = useState<'RIDE' | 'GIG'>('RIDE');
   const [isOnline, setIsOnline] = useState(false);
   const [isOnRide, setIsOnRide] = useState(false);
+  const [acceptedGig, setAcceptedGig] = useState<number | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+
+  const handleVerifyDelivery = () => {
+    setIsVerifying(true);
+    setTimeout(() => {
+      setIsVerifying(false);
+      setIsVerified(true);
+      toast.success('Gemini AI Vision confirmed delivery! Funds released to your wallet.');
+    }, 2500);
+  };
 
   const toggleMode = (newMode: 'RIDE' | 'GIG') => {
     setMode(newMode);
@@ -205,75 +217,153 @@ export const DriverDashboard: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-             <h3 className="text-xl font-bold text-white">Available Local Errands</h3>
-             
-             {/* Task Card */}
-             <div className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-emerald-500/50 transition-colors shadow-lg">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30 uppercase">Package Drop</span>
-                      <span className="text-xs text-slate-400 flex items-center gap-1"><Clock className="w-3 h-3" /> 15 mins away</span>
+             {!acceptedGig ? (
+               <>
+                 <h3 className="text-xl font-bold text-white mb-6">Available Local Errands</h3>
+                 
+                 {/* Task Card 1 */}
+                 <div className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-emerald-500/50 transition-colors shadow-lg mb-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30 uppercase">Package Drop</span>
+                          <span className="text-xs text-slate-400 flex items-center gap-1"><Clock className="w-3 h-3" /> 15 mins away</span>
+                        </div>
+                        <h4 className="text-lg font-bold text-slate-200">Deliver documents to Banani</h4>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl font-black text-emerald-400">৳250</div>
+                        <div className="text-xs text-slate-500">Escrow Locked</div>
+                      </div>
                     </div>
-                    <h4 className="text-lg font-bold text-slate-200">Deliver documents to Banani</h4>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl font-black text-emerald-400">৳250</div>
-                    <div className="text-xs text-slate-500">Escrow Locked</div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4 text-sm text-slate-400 mb-6 bg-black p-3 rounded-xl border border-neutral-800">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-rose-400" /> Pickup: Gulshan 2
-                  </div>
-                  <div className="w-8 border-t border-dashed border-neutral-700"></div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-emerald-400" /> Dropoff: Banani
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
-                    <ShieldCheck className="w-4 h-4 text-indigo-400" /> Photo verification required
-                  </div>
-                  <Button variant="outline" className="text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10">Accept Task</Button>
-                </div>
-             </div>
-             
-             {/* Task Card 2 */}
-             <div className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-emerald-500/50 transition-colors shadow-lg">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase">Grocery</span>
-                      <span className="text-xs text-slate-400 flex items-center gap-1"><Clock className="w-3 h-3" /> 5 mins away</span>
+                    
+                    <div className="flex items-center gap-4 text-sm text-slate-400 mb-6 bg-black p-3 rounded-xl border border-neutral-800">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-rose-400" /> Pickup: Gulshan 2
+                      </div>
+                      <div className="w-8 border-t border-dashed border-neutral-700"></div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-emerald-400" /> Dropoff: Banani
+                      </div>
                     </div>
-                    <h4 className="text-lg font-bold text-slate-200">Pick up groceries from Unimart</h4>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl font-black text-emerald-400">৳150</div>
-                    <div className="text-xs text-slate-500">Escrow Locked</div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4 text-sm text-slate-400 mb-6 bg-black p-3 rounded-xl border border-neutral-800">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-rose-400" /> Pickup: Gulshan Unimart
-                  </div>
-                  <div className="w-8 border-t border-dashed border-neutral-700"></div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-emerald-400" /> Dropoff: Gulshan 1
-                  </div>
-                </div>
 
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
-                    <ShieldCheck className="w-4 h-4 text-indigo-400" /> Photo verification required
-                  </div>
-                  <Button variant="outline" className="text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10">Accept Task</Button>
-                </div>
-             </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <ShieldCheck className="w-4 h-4 text-indigo-400" /> Photo verification required
+                      </div>
+                      <Button onClick={() => setAcceptedGig(1)} variant="outline" className="text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10">Accept Task</Button>
+                    </div>
+                 </div>
+                 
+                 {/* Task Card 2 */}
+                 <div className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-emerald-500/50 transition-colors shadow-lg">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase">Grocery</span>
+                          <span className="text-xs text-slate-400 flex items-center gap-1"><Clock className="w-3 h-3" /> 5 mins away</span>
+                        </div>
+                        <h4 className="text-lg font-bold text-slate-200">Pick up groceries from Unimart</h4>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl font-black text-emerald-400">৳150</div>
+                        <div className="text-xs text-slate-500">Escrow Locked</div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4 text-sm text-slate-400 mb-6 bg-black p-3 rounded-xl border border-neutral-800">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-rose-400" /> Pickup: Gulshan Unimart
+                      </div>
+                      <div className="w-8 border-t border-dashed border-neutral-700"></div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-emerald-400" /> Dropoff: Gulshan 1
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <ShieldCheck className="w-4 h-4 text-indigo-400" /> Photo verification required
+                      </div>
+                      <Button onClick={() => setAcceptedGig(2)} variant="outline" className="text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10">Accept Task</Button>
+                    </div>
+                 </div>
+               </>
+             ) : (
+               <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
+                 <div className="flex justify-between items-center">
+                   <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                     <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                     </span>
+                     Active Delivery
+                   </h3>
+                   <Button size="sm" variant="outline" onClick={() => { setAcceptedGig(null); setIsVerified(false); }}>Cancel</Button>
+                 </div>
+
+                 <div className="p-6 rounded-3xl bg-neutral-900 border border-neutral-800 shadow-xl space-y-6 relative overflow-hidden">
+                   {isVerifying && (
+                     <div className="absolute inset-0 bg-neutral-950/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center space-y-4">
+                       <Scan className="w-12 h-12 text-indigo-400 animate-pulse" />
+                       <div className="text-indigo-400 font-bold text-lg flex items-center gap-2">
+                         <Loader2 className="w-5 h-5 animate-spin" /> Gemini AI Verifying...
+                       </div>
+                       <p className="text-xs text-indigo-300">Scanning package and location data...</p>
+                     </div>
+                   )}
+
+                   <div className="flex justify-between items-start">
+                     <div>
+                       <h4 className="text-xl font-bold text-slate-200">Deliver documents to Banani</h4>
+                       <p className="text-sm text-slate-400 mt-1">Please drop the package at the reception.</p>
+                     </div>
+                     <div className="text-xl font-black text-emerald-400">৳250</div>
+                   </div>
+
+                   <div className="flex items-center gap-4 text-sm text-slate-300 bg-black/40 p-4 rounded-xl border border-neutral-800">
+                     <div className="flex items-center gap-2 flex-1">
+                       <MapPin className="w-4 h-4 text-emerald-400" /> Dropoff: Banani
+                     </div>
+                   </div>
+
+                   {/* AI Proof of Delivery Section */}
+                   <div className={`p-5 rounded-2xl border ${isVerified ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-indigo-500/10 border-indigo-500/30'} transition-colors`}>
+                     <h5 className={`font-bold flex items-center gap-2 mb-3 ${isVerified ? 'text-emerald-400' : 'text-indigo-400'}`}>
+                       {isVerified ? <CheckCircle2 className="w-5 h-5" /> : <Camera className="w-5 h-5" />}
+                       {isVerified ? 'Delivery Verified & Funds Released' : 'AI Proof-of-Delivery'}
+                     </h5>
+                     
+                     {!isVerified ? (
+                       <div className="space-y-4">
+                         <p className="text-sm text-indigo-300/80">
+                           Take a clear photo of the delivered package. Google Gemini Vision will analyze the image to confirm delivery.
+                         </p>
+                         <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-indigo-500/30 border-dashed rounded-xl cursor-pointer bg-indigo-950/20 hover:bg-indigo-950/40 transition-colors">
+                           <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                             <Upload className="w-8 h-8 mb-2 text-indigo-400" />
+                             <p className="text-sm text-indigo-400 font-bold">Click to Upload Photo</p>
+                             <p className="text-xs text-indigo-400/70">(JPEG, PNG)</p>
+                           </div>
+                           <input type="file" className="hidden" accept="image/*" onChange={handleVerifyDelivery} />
+                         </label>
+                       </div>
+                     ) : (
+                       <div className="text-sm text-emerald-300/80 space-y-4">
+                         <p>The AI has successfully verified the package location and condition.</p>
+                         <div className="p-3 bg-black/40 rounded-xl border border-emerald-500/20">
+                           <div className="flex justify-between items-center text-emerald-400 font-bold">
+                             <span>Funds Credited:</span>
+                             <span>+ ৳250</span>
+                           </div>
+                         </div>
+                         <Button onClick={() => { setAcceptedGig(null); setIsVerified(false); }} variant="primary" className="w-full bg-emerald-600 hover:bg-emerald-500 text-white">Find Next Task</Button>
+                       </div>
+                     )}
+                   </div>
+                 </div>
+               </div>
+             )}
           </div>
           
           <div className="space-y-6">
