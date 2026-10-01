@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Car, Package, MapPin, Navigation, Clock, ShieldCheck, Zap, Camera, Scan, CheckCircle2, Loader2, Upload } from 'lucide-react';
+import { Car, Package, MapPin, Navigation, Clock, ShieldCheck, Zap, Camera, Scan, CheckCircle2, Loader2, Upload, Map, AlertTriangle, Navigation2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'react-toastify';
 
@@ -9,7 +9,19 @@ export const DriverDashboard: React.FC = () => {
   const [mode, setMode] = useState<'RIDE' | 'GIG'>('RIDE');
   const [isOnline, setIsOnline] = useState(false);
   const [isOnRide, setIsOnRide] = useState(false);
+  const [geofenceAlert, setGeofenceAlert] = useState(false);
   const [acceptedGig, setAcceptedGig] = useState<number | null>(null);
+
+  const simulateGeofenceDeviation = () => {
+    setGeofenceAlert(true);
+    toast.error('GEOFENCE ALERT: You have deviated from the optimized route! Please return to the suggested path.', {
+      theme: "dark"
+    });
+    setTimeout(() => {
+      setGeofenceAlert(false);
+      toast.info('Route recalculated. Back on track.');
+    }, 5000);
+  };
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 
@@ -145,10 +157,52 @@ export const DriverDashboard: React.FC = () => {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Real-time GPS Tracking & Geofencing View */}
+                  <div className={`relative w-full h-48 rounded-xl overflow-hidden mb-6 border ${geofenceAlert ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'border-indigo-500/20'} transition-all duration-300 bg-neutral-900 flex items-center justify-center`}>
+                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }}></div>
+                    
+                    {/* Simulated Path */}
+                    <div className="absolute top-1/2 left-10 right-10 h-1 bg-indigo-500/30 rounded-full"></div>
+                    <div className={`absolute top-1/2 h-1 bg-indigo-500 rounded-full transition-all duration-1000 ${geofenceAlert ? 'w-1/2 left-10 bg-red-500' : 'w-3/4 left-10'}`}></div>
+                    
+                    {/* Map Elements */}
+                    <div className="absolute left-8 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-rose-500 border-2 border-black z-10"></div>
+                    <div className="absolute right-8 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-emerald-500 border-2 border-black z-10"></div>
+                    
+                    {/* Vehicle Tracker */}
+                    <div className={`absolute top-1/2 -translate-y-1/2 z-20 flex flex-col items-center transition-all duration-1000 ${geofenceAlert ? 'left-1/2 -translate-y-8' : 'left-[70%]'}`}>
+                      <div className="bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded-md mb-1 shadow-lg whitespace-nowrap">
+                        {geofenceAlert ? 'Deviated Route' : '5 mins away'}
+                      </div>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg ${geofenceAlert ? 'bg-red-500 animate-pulse' : 'bg-indigo-600'}`}>
+                        <Navigation2 className="w-4 h-4 text-white fill-white transform rotate-45" />
+                      </div>
+                    </div>
+                    
+                    {/* Geofencing Overlay */}
+                    {geofenceAlert && (
+                      <div className="absolute inset-0 bg-red-500/10 flex flex-col items-center justify-center backdrop-blur-[1px]">
+                        <AlertTriangle className="w-8 h-8 text-red-500 mb-2 animate-bounce" />
+                        <span className="text-xs font-bold text-red-400 bg-black/60 px-3 py-1 rounded-full">GEOFENCE BREACH DETECTED</span>
+                      </div>
+                    )}
+                    
+                    <div className="absolute bottom-2 left-2 flex gap-2">
+                       <span className="px-2 py-1 bg-black/60 rounded-md text-[10px] text-slate-300 font-medium flex items-center gap-1 backdrop-blur-md">
+                         <Map className="w-3 h-3" /> Live GPS Active
+                       </span>
+                    </div>
+                  </div>
 
-                  <Button onClick={() => setIsOnRide(false)} variant="primary" className="w-full bg-indigo-600 hover:bg-indigo-500 text-white">
-                    Complete Ride
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button onClick={simulateGeofenceDeviation} variant="outline" className="flex-1 border-red-500/30 text-red-400 hover:bg-red-500/10">
+                      Simulate Deviation
+                    </Button>
+                    <Button onClick={() => setIsOnRide(false)} variant="primary" className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white">
+                      Complete Ride
+                    </Button>
+                  </div>
                 </div>
 
                 {/* AI Route-Optimized Task Matcher */}
