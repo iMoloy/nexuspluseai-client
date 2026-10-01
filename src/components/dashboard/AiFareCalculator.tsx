@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Calculator, MapPin, Zap, CloudRain, Car, Navigation, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { toast } from 'react-toastify';
 
 export const AiFareCalculator: React.FC = () => {
