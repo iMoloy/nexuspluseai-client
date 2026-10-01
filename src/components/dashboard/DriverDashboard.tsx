@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Car, Package, MapPin, Navigation, Clock, ShieldCheck, Zap, Camera, Scan, CheckCircle2, Loader2, Upload, Map, AlertTriangle, Navigation2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'react-toastify';
+import { fetchApi } from '@/services/api';
 
 export const DriverDashboard: React.FC = () => {
   const [mode, setMode] = useState<'RIDE' | 'GIG'>('RIDE');
@@ -25,13 +26,38 @@ export const DriverDashboard: React.FC = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 
-  const handleVerifyDelivery = () => {
+  const handleVerifyDelivery = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     setIsVerifying(true);
-    setTimeout(() => {
+    try {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64Data = reader.result as string;
+        
+        const res = await fetchApi('/ai/verify-delivery', {
+          method: 'POST',
+          body: JSON.stringify({ 
+            taskRequirements: "Deliver documents to Banani, drop at reception",
+            imageBase64: base64Data
+          })
+        });
+
+        if (res.success && res.data && res.data.isVerified) {
+          setIsVerified(true);
+          toast.success(`Gemini AI Vision: ${res.data.analysisReport}`);
+          toast.success('Funds released to your wallet.');
+        } else {
+          toast.error(res.data?.analysisReport || 'Verification failed, please retake photo.');
+        }
+        setIsVerifying(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast.error('AI Verification failed. Check network.');
       setIsVerifying(false);
-      setIsVerified(true);
-      toast.success('Gemini AI Vision confirmed delivery! Funds released to your wallet.');
-    }, 2500);
+    }
   };
 
   const toggleMode = (newMode: 'RIDE' | 'GIG') => {
