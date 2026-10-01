@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Calculator, MapPin, Zap, CloudRain, Car, Navigation, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'react-toastify';
+import { fetchApi } from '@/services/api';
 
 export const AiFareCalculator: React.FC = () => {
   const [pickup, setPickup] = useState('');
@@ -12,14 +13,14 @@ export const AiFareCalculator: React.FC = () => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [fareResult, setFareResult] = useState<null | {
     baseFare: number;
-    distance: string;
-    trafficMultiplier: number;
-    weatherMultiplier: number;
+    distanceCharge: number;
+    timeCharge: number;
     surgeMultiplier: number;
-    totalFare: number;
+    total: number;
+    aiInsight: string;
   }>(null);
 
-  const calculateFare = () => {
+  const calculateFare = async () => {
     if (!pickup || !dropoff) {
       toast.error('Please enter both pickup and dropoff locations.');
       return;
@@ -28,26 +29,28 @@ export const AiFareCalculator: React.FC = () => {
     setIsCalculating(true);
     setFareResult(null);
 
-    // Simulate AI calculation delay
-    setTimeout(() => {
-      const baseFare = vehicle === 'BIKE' ? 60 : vehicle === 'CAR' ? 120 : 80;
-      const traffic = 1.2; // Heavy Traffic
-      const weather = 1.1; // Raining
-      const surge = 1.5; // High Demand
-      
-      const total = Math.round(baseFare * traffic * weather * surge);
-      
-      setFareResult({
-        baseFare,
-        distance: '6.4 km',
-        trafficMultiplier: traffic,
-        weatherMultiplier: weather,
-        surgeMultiplier: surge,
-        totalFare: total
+    try {
+      const res = await fetchApi('/ai/calculate-fare', {
+        method: 'POST',
+        body: JSON.stringify({
+          pickup,
+          dropoff,
+          category: 'Ride',
+          vehicleType: vehicle
+        })
       });
+
+      if (res.success && res.data) {
+        setFareResult(res.data);
+        toast.success('AI optimized fare generated!');
+      } else {
+        toast.error('Failed to calculate fare.');
+      }
+    } catch (error) {
+      toast.error('Error calculating fare.');
+    } finally {
       setIsCalculating(false);
-      toast.success('AI optimized fare generated!');
-    }, 1500);
+    }
   };
 
   return (
@@ -133,11 +136,11 @@ export const AiFareCalculator: React.FC = () => {
                <div className="flex justify-between items-end border-b border-neutral-800 pb-4">
                  <div>
                    <div className="text-xs text-purple-400 font-bold uppercase tracking-wider mb-1">AI Suggested Fare</div>
-                   <div className="text-3xl font-black text-white">৳{fareResult.totalFare}</div>
+                   <div className="text-3xl font-black text-white">৳{fareResult.total}</div>
                  </div>
                  <div className="text-right">
                    <div className="text-xs text-slate-400">Est. Distance</div>
-                   <div className="text-sm font-bold text-slate-200">{fareResult.distance}</div>
+                   <div className="text-sm font-bold text-slate-200">AI Est.</div>
                  </div>
                </div>
 
@@ -147,16 +150,19 @@ export const AiFareCalculator: React.FC = () => {
                    <span className="text-slate-200">৳{fareResult.baseFare}</span>
                  </div>
                  <div className="flex justify-between items-center text-sm">
-                   <span className="text-slate-400 flex items-center gap-1.5"><Car className="w-3.5 h-3.5 text-rose-400" /> Traffic (Heavy)</span>
-                   <span className="text-rose-400">x{fareResult.trafficMultiplier}</span>
+                   <span className="text-slate-400 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-rose-400" /> Distance Charge</span>
+                   <span className="text-rose-400">+ ৳{fareResult.distanceCharge}</span>
                  </div>
                  <div className="flex justify-between items-center text-sm">
-                   <span className="text-slate-400 flex items-center gap-1.5"><CloudRain className="w-3.5 h-3.5 text-blue-400" /> Weather (Rain)</span>
-                   <span className="text-blue-400">x{fareResult.weatherMultiplier}</span>
+                   <span className="text-slate-400 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-blue-400" /> Time Charge</span>
+                   <span className="text-blue-400">+ ৳{fareResult.timeCharge}</span>
                  </div>
                  <div className="flex justify-between items-center text-sm p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                   <span className="text-emerald-400 font-bold flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> High Demand Surge</span>
+                   <span className="text-emerald-400 font-bold flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> Dynamic Surge</span>
                    <span className="text-emerald-400 font-bold">x{fareResult.surgeMultiplier}</span>
+                 </div>
+                 <div className="text-xs text-slate-400 mt-3 pt-3 border-t border-neutral-800 italic">
+                   " {fareResult.aiInsight} "
                  </div>
                </div>
              </div>
