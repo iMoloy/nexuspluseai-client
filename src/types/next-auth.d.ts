@@ -12,6 +12,8 @@ declare module 'next-auth' {
       avatar?: string;
       kycVerified?: boolean;
       authProvider?: string;
+      driverMode?: 'RIDE' | 'GIG';
+      isOnline?: boolean;
     };
   }
 }
@@ -27,6 +29,8 @@ declare module 'next-auth/jwt' {
       avatar?: string;
       kycVerified?: boolean;
       authProvider?: string;
+      driverMode?: 'RIDE' | 'GIG';
+      isOnline?: boolean;
     };
   }
 }

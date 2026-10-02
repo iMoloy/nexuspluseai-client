@@ -4,11 +4,14 @@ import React, { useState } from 'react';
 import { Car, Package, MapPin, Navigation, Clock, ShieldCheck, Zap, Camera, Scan, CheckCircle2, Loader2, Upload, Map, AlertTriangle, Navigation2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'react-toastify';
+import { useAuth } from '@/hooks/useAuth';
 import { fetchApi } from '@/services/api';
 
 export const DriverDashboard: React.FC = () => {
-  const [mode, setMode] = useState<'RIDE' | 'GIG'>('RIDE');
-  const [isOnline, setIsOnline] = useState(false);
+  const { currentUser, setAuthUser } = useAuth();
+  
+  const [mode, setMode] = useState<'RIDE' | 'GIG'>(currentUser?.driverMode || 'RIDE');
+  const [isOnline, setIsOnline] = useState(currentUser?.isOnline || false);
   const [isOnRide, setIsOnRide] = useState(false);
   const [geofenceAlert, setGeofenceAlert] = useState(false);
   const [acceptedGig, setAcceptedGig] = useState<number | null>(null);
@@ -79,14 +82,37 @@ export const DriverDashboard: React.FC = () => {
     }
   };
 
-  const toggleMode = (newMode: 'RIDE' | 'GIG') => {
+  const toggleMode = async (newMode: 'RIDE' | 'GIG') => {
     setMode(newMode);
     toast.success(`Switched to ${newMode === 'RIDE' ? 'Passenger Rides' : 'Local Errands/Delivery Tasks'} Mode!`);
+    try {
+      await fetchApi('/auth/driver/status', {
+        method: 'POST',
+        body: JSON.stringify({ driverMode: newMode })
+      });
+      if (currentUser) {
+        setAuthUser({ ...currentUser, driverMode: newMode });
+      }
+    } catch (error) {
+      console.error('Failed to update driver mode', error);
+    }
   };
 
-  const toggleOnlineStatus = () => {
-    setIsOnline(!isOnline);
-    toast.info(`You are now ${!isOnline ? 'Online and visible to users' : 'Offline'}`);
+  const toggleOnlineStatus = async () => {
+    const newStatus = !isOnline;
+    setIsOnline(newStatus);
+    toast.info(`You are now ${newStatus ? 'Online and visible to users' : 'Offline'}`);
+    try {
+      await fetchApi('/auth/driver/status', {
+        method: 'POST',
+        body: JSON.stringify({ isOnline: newStatus })
+      });
+      if (currentUser) {
+        setAuthUser({ ...currentUser, isOnline: newStatus });
+      }
+    } catch (error) {
+      console.error('Failed to update online status', error);
+    }
   };
 
   return (

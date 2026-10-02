@@ -25,6 +25,7 @@ export const WalletSection: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<'STRIPE' | 'BKASH' | 'NAGAD' | 'BANK'>('STRIPE');
   const [transactionMode, setTransactionMode] = useState<'DEPOSIT' | 'WITHDRAW'>('WITHDRAW');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoadingWallet, setIsLoadingWallet] = useState(false);
 
   const initialMockTransactions = [
     { id: 'tx_101', type: 'ESCROW_LOCK', amount: 300, title: 'Tesla Model 3 Rental Escrow Lock', date: 'Just now', status: 'COMPLETED', isLock: true },

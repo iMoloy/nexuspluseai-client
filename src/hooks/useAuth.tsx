@@ -12,6 +12,8 @@ export interface AuthUser {
   avatar?: string;
   kycVerified?: boolean;
   authProvider?: string;
+  driverMode?: 'RIDE' | 'GIG';
+  isOnline?: boolean;
 }
 
 interface AuthContextType {
@@ -59,7 +61,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         role: session.backendUser?.role || 'CLIENT',
         avatar: session.backendUser?.avatar || session.user.image || undefined,
         kycVerified: session.backendUser?.kycVerified ?? true,
-        authProvider: 'google'
+        authProvider: 'google',
+        driverMode: session.backendUser?.driverMode,
+        isOnline: session.backendUser?.isOnline
       };
       setLocalUser(gUser);
       if (typeof window !== 'undefined') {
@@ -79,7 +83,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         role: session.backendUser.role,
         avatar: session.backendUser.avatar,
         kycVerified: session.backendUser.kycVerified,
-        authProvider: session.backendUser.authProvider
+        authProvider: session.backendUser.authProvider,
+        driverMode: session.backendUser.driverMode,
+        isOnline: session.backendUser.isOnline
       }
     : (session?.user
         ? {
