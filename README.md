@@ -5,6 +5,7 @@
     <a href="https://nexuspulseai-client.vercel.app"><img src="https://img.shields.io/badge/Vercel-Live_Production-000000?style=for-the-badge&logo=vercel&logoColor=white" /></a>
     <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs" />
     <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" />
+    <img src="https://img.shields.io/badge/Socket.io-v4-010101?style=for-the-badge&logo=socket.io&logoColor=white" />
     <img src="https://img.shields.io/badge/TailwindCSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css" />
     <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript" />
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" />
@@ -28,24 +29,28 @@
 | Feature / Tab | Icon | Description |
 |---------------|------|-------------|
 | 🏠 **Explore All** | `✨` | Hero cinematic slider, live platform metrics, capability showcase, and unified dashboard view |
+| 🚖 **Driver Hub** | `🚗` | Unified Mode Switcher (Ride/Gig), AI Route-Optimized Matcher, & AI Fare Surge Calculator |
+| 📡 **Real-Time GPS**| `🗺️` | Socket.IO driven driver tracking, animated geofencing route deviation alerts, and live map view |
+| 🚨 **Emergency SOS**| `🛡️` | 1-Click Panic Button sending instant real-time live GPS signals to admins via Socket.IO |
 | 🚗 **Asset Rentals** | `🏎️` | Book luxury vehicles (BMW M4, Tesla), cinema cameras (RED, Mac Studio), & studios with Escrow deposits |
 | 📋 **Gig Kanban** | `💼` | Interactive micro-tasking workflow tracking (`Open` ➔ `In Progress` ➔ `Under Review` ➔ `Completed & Paid`) |
 | 💳 **Escrow Wallet** | `👛` | Ledger balance management, deposit holds, & multi-payout channels (Visa, bKash, Nagad, Bank Transfer) |
-| 🤖 **AI Assistant** | `🤖` | Floating modal with Gemini AI Task Spec Generator & AI Dispute Settlement Mediator |
+| 🤖 **AI Assistant** | `🤖` | Gemini AI Task Spec Generator, AI Proof-of-Delivery Vision Verification & AI Dispute Settlement Mediator |
 | 👤 **User Profile** | `👤` | Profile management, KYC verification badge, role configuration (`Client`, `Freelancer`, `Asset Owner`) |
-| 📜 **Governance** | `📑` | Terms of Escrow, About Us, & 24/7 Support contact portal |
 | ☀️/🌙 **Day/Night Theme**| `☀️` | Floating glassmorphic theme toggle button with light/dark persistence across all pages |
 
 ---
 
 ## 🚀 Key AI & Interactive Capabilities
 
-### 🤖 1. Gemini AI Task Spec Generator & Dispute Mediator
+### 🤖 1. Gemini AI Suite (Generative, Vision & Routing)
 Launch the AI Assistant modal anywhere on the app to:
-- **Task Spec Generator:** Input a broad project idea (e.g., *"Build an automated rental engine"*) to generate a structured scope, required stack, estimated timeframe, and recommended milestone budget.
-- **Dispute Settlement Mediator:** Submit claim summaries during contract disputes. Gemini AI analyzes deliverable proof and recommends fair percentage split payouts (e.g., 80% Freelancer release / 20% Client refund).
+- **Task Spec Generator:** Input a broad project idea to generate a structured scope, timeframe, and budget.
+- **Dispute Settlement Mediator:** Submit claim summaries during contract disputes for AI fair percentage splits.
+- **AI Proof-of-Delivery (Vision):** Drivers upload a photo of the delivered package; AI Vision confirms its location and condition to auto-release escrow funds.
+- **Route-Optimized Task Matcher:** Matches drivers currently on a ride with micro-tasks lying across their exact trajectory.
 
-### 🚗 2. Smart Asset & Vehicle Rentals with Escrow
+### 🚗 2. Smart Asset Rentals & Escrow Wallet
 Rent luxury vehicles and high-value workstation gear safely:
 - Automated security deposit calculation.
 - Owner rating badges and instant insurance lock.
@@ -56,7 +61,11 @@ Complete milestone-driven freelance projects with real-time status transitions:
 - `Open` ➔ `In Progress` ➔ `Under Review` ➔ `Completed & Paid`.
 - Milestone budget locked securely in Escrow ledger during active work phase.
 
-### 💳 4. Multi-Channel Wallet & Payout System
+### 📡 4. Real-Time Tracking & Emergency Hub (Socket.IO)
+- **Live GPS Tracking:** Animated live tracking for drivers en route with dynamic geofencing alerts for route deviation.
+- **Safety SOS System:** 1-Click Panic Button that broadcasts real-time GPS coordinates directly to admins.
+
+### 💳 5. Multi-Channel Wallet & Payout System
 Support for local and international payment methods:
 - **International Card:** Visa / Mastercard / Stripe
 - **Local Mobile Financial Services (MFS):** bKash, Nagad
@@ -71,6 +80,7 @@ Support for local and international payment methods:
 | **Core Framework** | Next.js 16 (App Router, Turbopack) |
 | **UI Library** | React 19, TypeScript |
 | **Styling** | Tailwind CSS v4, Custom CSS Design Tokens |
+| **Real-time Engine**| Socket.IO Client (`socket.io-client`) |
 | **Animation** | Framer Motion, CSS Micro-Animations |
 | **Icons & Media** | Lucide React, FontAwesome, ImgBB API Integration |
 | **Authentication** | NextAuth.js (Google OAuth & Local JWT fallback) |
