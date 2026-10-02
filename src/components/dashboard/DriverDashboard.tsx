@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
 import { fetchApi } from '@/services/api';
+import { io, Socket } from 'socket.io-client';
 
 export const DriverDashboard: React.FC = () => {
   const { currentUser, setAuthUser } = useAuth();
@@ -17,6 +18,30 @@ export const DriverDashboard: React.FC = () => {
   const [acceptedGig, setAcceptedGig] = useState<number | null>(null);
   const [addonTask, setAddonTask] = useState<any>(null);
   const [isSearchingAddon, setIsSearchingAddon] = useState(false);
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  React.useEffect(() => {
+    const socketInstance = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000');
+    
+    if (currentUser) {
+      socketInstance.emit('join', currentUser.id);
+    }
+    
+    socketInstance.on('geofence_breach', (data) => {
+      setGeofenceAlert(true);
+      toast.error(`GEOFENCE ALERT: ${data.message}`, { theme: "dark" });
+      setTimeout(() => {
+        setGeofenceAlert(false);
+        toast.info('Route recalculated. Back on track.');
+      }, 5000);
+    });
+
+    setSocket(socketInstance);
+
+    return () => {
+      socketInstance.disconnect();
+    };
+  }, [currentUser]);
 
   React.useEffect(() => {
     if (isOnRide) {
@@ -36,14 +61,22 @@ export const DriverDashboard: React.FC = () => {
   }, [isOnRide]);
 
   const simulateGeofenceDeviation = () => {
-    setGeofenceAlert(true);
-    toast.error('GEOFENCE ALERT: You have deviated from the optimized route! Please return to the suggested path.', {
-      theme: "dark"
-    });
-    setTimeout(() => {
-      setGeofenceAlert(false);
-      toast.info('Route recalculated. Back on track.');
-    }, 5000);
+    if (socket && currentUser) {
+      socket.emit('geofence_alert', {
+        driverId: currentUser.id,
+        message: 'You have deviated from the optimized route! Please return to the suggested path.',
+        taskId: currentUser.id // using user ID as room for simulation
+      });
+    } else {
+      setGeofenceAlert(true);
+      toast.error('GEOFENCE ALERT: You have deviated from the optimized route! Please return to the suggested path.', {
+        theme: "dark"
+      });
+      setTimeout(() => {
+        setGeofenceAlert(false);
+        toast.info('Route recalculated. Back on track.');
+      }, 5000);
+    }
   };
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);

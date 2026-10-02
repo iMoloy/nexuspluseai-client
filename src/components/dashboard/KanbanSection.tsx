@@ -35,50 +35,7 @@ interface ServerGigResponseItem {
 export const KanbanSection: React.FC = () => {
   const [isLoadingGigs, setIsLoadingGigs] = useState(false);
 
-  const initialMockTasks: GigTask[] = [
-    {
-      id: 'gig_1',
-      title: 'Design Dark Mode Glassmorphism Dashboard UI',
-      category: 'UI/UX Design',
-      budget: 350,
-      clientName: 'Moloy Paul',
-      status: 'OPEN',
-      applicantCount: 4,
-      assignedFreelancer: null
-    },
-    {
-      id: 'gig_2',
-      title: 'Integrate Express SSE Stream & TanStack Query',
-      category: 'Web Development',
-      budget: 450,
-      clientName: 'Arafat Rahman',
-      status: 'IN_PROGRESS',
-      applicantCount: 6,
-      assignedFreelancer: 'Sharif Ahmed'
-    },
-    {
-      id: 'gig_3',
-      title: 'Build AI Dispute Mediator Gemini API Agent',
-      category: 'AI / Machine Learning',
-      budget: 500,
-      clientName: 'Tanvir Hossain',
-      status: 'UNDER_REVIEW',
-      applicantCount: 2,
-      assignedFreelancer: 'Sharif Ahmed'
-    },
-    {
-      id: 'gig_4',
-      title: 'Setup MongoDB Atomic Wallet Transaction Services',
-      category: 'Backend Node.js',
-      budget: 400,
-      clientName: 'Moloy Paul',
-      status: 'COMPLETED',
-      applicantCount: 5,
-      assignedFreelancer: 'Sharif Ahmed'
-    }
-  ];
-
-  const [tasks, setTasks] = useState<GigTask[]>(initialMockTasks);
+  const [tasks, setTasks] = useState<GigTask[]>([]);
 
   // Fetch live gigs from Express API
   useEffect(() => {

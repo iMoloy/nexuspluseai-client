@@ -4,27 +4,57 @@ import React, { useState } from 'react';
 import { ShieldAlert, PhoneCall, AlertTriangle, MapPin, X, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/hooks/useAuth';
+import { io, Socket } from 'socket.io-client';
 
 export const EmergencySOS: React.FC = () => {
+  const { currentUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
-  const handleSos = () => {
-    setIsSending(true);
-    // Simulate sending live GPS location to police and emergency contacts
-    setTimeout(() => {
+  React.useEffect(() => {
+    const socketInstance = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000');
+    
+    socketInstance.on('sos_received', (data) => {
       setIsSending(false);
       setSent(true);
-      toast.error('EMERGENCY SOS SENT! Police and emergency contacts have received your live location.', {
+      toast.error(`EMERGENCY SOS SENT! ${data.message}`, {
         theme: 'dark',
         autoClose: false
       });
-    }, 2000);
+    });
+
+    setSocket(socketInstance);
+    return () => {
+      socketInstance.disconnect();
+    };
+  }, []);
+
+  const handleSos = () => {
+    setIsSending(true);
+    if (socket && currentUser) {
+      socket.emit('trigger_sos', {
+        driverId: currentUser.id,
+        lat: 23.7940, // Simulated Gulshan lat
+        lng: 90.4125, // Simulated Gulshan lng
+        details: 'Driver pressed SOS button in app.'
+      });
+    } else {
+      setTimeout(() => {
+        setIsSending(false);
+        setSent(true);
+        toast.error('EMERGENCY SOS SENT! Police and emergency contacts have received your live location.', {
+          theme: 'dark',
+          autoClose: false
+        });
+      }, 2000);
+    }
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 left-6 z-50">
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}

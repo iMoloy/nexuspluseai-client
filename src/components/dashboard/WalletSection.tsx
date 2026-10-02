@@ -27,14 +27,7 @@ export const WalletSection: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoadingWallet, setIsLoadingWallet] = useState(false);
 
-  const initialMockTransactions = [
-    { id: 'tx_101', type: 'ESCROW_LOCK', amount: 300, title: 'Tesla Model 3 Rental Escrow Lock', date: 'Just now', status: 'COMPLETED', isLock: true },
-    { id: 'tx_102', type: 'DEPOSIT', amount: 500, title: 'Stripe Wallet Deposit', date: '2 hours ago', status: 'COMPLETED', isLock: false },
-    { id: 'tx_103', type: 'ESCROW_RELEASE', amount: 450, title: 'Gig Payment Released from Escrow', date: 'Yesterday', status: 'COMPLETED', isLock: false },
-    { id: 'tx_104', type: 'ESCROW_REFUND', amount: 200, title: 'Security Deposit Refund Returned', date: '3 days ago', status: 'COMPLETED', isLock: false }
-  ];
-
-  const [transactions, setTransactions] = useState(initialMockTransactions);
+  const [transactions, setTransactions] = useState<ApiTransactionItem[]>([]);
 
   // Fetch live wallet balance and transactions from Express API
   const loadWalletData = async () => {
@@ -103,18 +96,7 @@ export const WalletSection: React.FC = () => {
           }
           toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
         } else {
-          // Fallback simulation
-          setBalance(prev => prev + val);
-          setTransactions(prev => [{
-            id: `tx_${Date.now()}`,
-            type: 'DEPOSIT',
-            amount: val,
-            title: `Wallet Deposit via ${paymentMethod}`,
-            date: 'Just now',
-            status: 'COMPLETED',
-            isLock: false
-          }, ...prev]);
-          toast.success(`Successfully deposited $${val.toFixed(2)} via ${paymentMethod}!`);
+          toast.error('Failed to process deposit.');
         }
       } else {
         const res = await fetchApi('/wallet/withdraw', {
