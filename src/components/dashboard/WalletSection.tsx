@@ -16,6 +16,9 @@ interface ApiTransactionItem {
   description?: string;
   createdAt?: string;
   status: string;
+  title?: string;
+  date?: string;
+  isLock?: boolean;
 }
 
 export const WalletSection: React.FC = () => {
