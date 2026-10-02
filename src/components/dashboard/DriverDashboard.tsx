@@ -12,6 +12,25 @@ export const DriverDashboard: React.FC = () => {
   const [isOnRide, setIsOnRide] = useState(false);
   const [geofenceAlert, setGeofenceAlert] = useState(false);
   const [acceptedGig, setAcceptedGig] = useState<number | null>(null);
+  const [addonTask, setAddonTask] = useState<any>(null);
+  const [isSearchingAddon, setIsSearchingAddon] = useState(false);
+
+  React.useEffect(() => {
+    if (isOnRide) {
+      setIsSearchingAddon(true);
+      fetchApi('/ai/match-route', {
+        method: 'POST',
+        body: JSON.stringify({ pickup: 'Dhanmondi 27', dropoff: 'Gulshan 2' })
+      }).then(res => {
+        if (res.success && res.data) {
+          setAddonTask(res.data);
+        }
+        setIsSearchingAddon(false);
+      }).catch(() => setIsSearchingAddon(false));
+    } else {
+      setAddonTask(null);
+    }
+  }, [isOnRide]);
 
   const simulateGeofenceDeviation = () => {
     setGeofenceAlert(true);
@@ -246,34 +265,45 @@ export const DriverDashboard: React.FC = () => {
                     </div>
                     
                     <h4 className="text-lg font-bold text-white mb-1">Perfect Add-on Delivery</h4>
-                    <p className="text-sm text-slate-400 max-w-md mb-5">
-                      We found a small parcel delivery that perfectly aligns with your current ride route to Gulshan 2. No detours needed!
-                    </p>
                     
-                    <div className="p-4 rounded-2xl bg-black/40 border border-emerald-500/20 hover:border-emerald-500/50 transition-all">
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                            <Package className="w-5 h-5 text-emerald-400" />
+                    {isSearchingAddon ? (
+                      <div className="flex items-center gap-2 text-emerald-400 py-4">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span className="text-sm">AI is finding optimal route addons...</span>
+                      </div>
+                    ) : addonTask ? (
+                      <>
+                        <p className="text-sm text-slate-400 max-w-md mb-5">
+                          {addonTask.matchReason}
+                        </p>
+                        <div className="p-4 rounded-2xl bg-black/40 border border-emerald-500/20 hover:border-emerald-500/50 transition-all">
+                          <div className="flex justify-between items-start mb-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                                <Package className="w-5 h-5 text-emerald-400" />
+                              </div>
+                              <div>
+                                <h5 className="font-bold text-slate-200">{addonTask.taskTitle}</h5>
+                                <span className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                  <Clock className="w-3 h-3" /> Detour: {addonTask.detourTimeMinutes} mins
+                                </span>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-xl font-black text-emerald-400">+৳{addonTask.extraEarnings}</span>
+                            </div>
                           </div>
-                          <div>
-                            <h5 className="font-bold text-slate-200">Documents to Gulshan 1</h5>
-                            <span className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                              <Clock className="w-3 h-3" /> Pickup is on the way (2 min)
-                            </span>
+                          
+                          <div className="flex gap-3 mt-4">
+                            <Button size="sm" variant="outline" className="flex-1 bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 shadow-lg shadow-emerald-900/20" onClick={() => toast.success('Add-on task accepted! Route updated.')}>
+                              Accept & Add to Route
+                            </Button>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <span className="text-xl font-black text-emerald-400">+৳120</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex gap-3 mt-4">
-                        <Button size="sm" variant="outline" className="flex-1 bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 shadow-lg shadow-emerald-900/20" onClick={() => toast.success('Add-on task accepted! Route updated.')}>
-                          Accept & Add to Route
-                        </Button>
-                      </div>
-                    </div>
+                      </>
+                    ) : (
+                      <p className="text-sm text-slate-400 py-4">No optimal addons found right now.</p>
+                    )}
                   </div>
                 </div>
               </div>
